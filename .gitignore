@@ -1,7 +1,14 @@
 /servicePlan/utils.py
 /db.sqlite3
 /user_profile/migrations/
+<<<<<<< HEAD
 .idea/
 __pycache__/
 /quality/migrations/
 /landing/migrations/
+=======
+venv/
+.idea/
+servicePlan/__pycache__/
+
+>>>>>>> 469dd2f3171c62a24b1be53ddbe46fe4d03dfa4f
