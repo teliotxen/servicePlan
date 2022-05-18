@@ -1,0 +1,59 @@
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .imgs{
+            width: 150px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+        <div>{{ form.title }}</div>
+        <div>{{ form.desc|safe }}</div>
+        <div>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+        <div>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+        <div>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+        <div>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+        <div>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+
+        <div id="image_container"></div>
+        <input type="submit" value="제출하기">
+    </form>
+
+
+
+<script>
+    let attached = document.querySelectorAll('.attached')
+    for (i=1; i<5; i++){
+        attached[i].style.display = 'none'
+    }
+
+
+    function setThumbnail(event) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            var img = document.createElement("img");
+            img.setAttribute("src", event.target.result);
+            document.querySelector("div#image_container").appendChild(img);
+            let attached = document.querySelectorAll('.attached')
+
+            var countImage = document.querySelector("div#image_container").children.length
+            document.querySelector("div#image_container").lastChild.setAttribute('class', 'imgs')
+            if (countImage<5){
+                attached[countImage].style.display ="block"
+            }
+
+
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+
+
+</body>
+</html>
