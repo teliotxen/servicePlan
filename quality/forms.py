@@ -23,4 +23,4 @@ class BlockForm(forms.ModelForm):
 class CommentsForm(forms.ModelForm):
     class Meta:
         model = Comments
-        fields = ['desc', 'image_1', 'image_2', 'image_3', 'image_4', 'image_5']
+        fields = ['desc', 'status', 'image_1', 'image_2', 'image_3', 'image_4', 'image_5']

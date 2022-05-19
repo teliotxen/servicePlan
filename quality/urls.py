@@ -18,6 +18,19 @@ from quality import views
 
 
 urlpatterns = [
-    path('project/input/', views.project_input, name='project_input')
+    path('', views.main, name='main'),
+    path('project/input/', views.project_input, name='project_input'),
+    path('project/list/', views.project_list, name='project_list'),
+    path('project/deatil/<int:pk>/', views.project_detail, name='project_detail'),
+
+    path('scenario/input/', views.scenario_input, name='scenario_input'),
+    path('scenario/list/', views.scenario_input, name='scenario_list'),
+    path('scenario/deatil/<int:pk>/', views.scenario_detail, name='scenario_detail'),
+
+    path('block/input/', views.scenario_input, name='block_input'),
+    path('block/list/', views.block_input, name='block_list'),
+
+    path('comment/input/', views.scenario_input, name='comment_input'),
+    path('comment/list/', views.comment_input, name='comment_list'),
 ]
 

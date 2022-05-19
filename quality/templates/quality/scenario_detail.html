@@ -1,0 +1,90 @@
+{% extends 'base/base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+
+
+{% block detail %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>시나리오 디테일</h1>
+            <div>
+            {#    <a href="{% url 'project_list' %}">리스트로 이동</a>#}
+            </div>
+            <div>
+                <ul>
+                    <li>{{ data.title }}</li>
+                    <li>{{ data.desc }}</li>
+                    <li>{{ data.pk }}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div>
+                {% for li in list %}
+                    <div class="card" style="margin-bottom: 10px;">
+                        <h5 class="card-header">{{ li.title }}</h5>
+                        <div class="card-body">
+{#                            <h5 class="card-title">Special title treatment</h5>#}
+                            <p class="card-text">{{ li.desc }}</p>
+                            <div class="btn-group end">
+                                <a href="#" class="btn btn-outline-primary" aria-current="page">Active link</a>
+                            </div>
+                            <div class="btn-group end">
+                                <a href="#" class="btn btn-outline-primary">Link</a>
+                                <a href="#" class="btn btn-outline-primary">Link</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div>
+                <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
+                    {% if position == "comment" %}
+                        <div>{{ form.status }}</div>
+                    {% else %}
+                        <div>{{ form.title }}</div>
+                    {% endif %}
+
+                    <div>{{ form.desc|safe }}</div>
+                    <div>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+                    <div>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+                    <div>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+                    <div>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+                    <div>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+                    <div id="image_container"></div>
+                    <div>
+                        <input type="submit" value="제출하기">
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block list %}
+
+
+
+{% endblock %}
+
+{% block input %}
+
+
+{% endblock %}
+
+{% block script %}
+
+
+{% endblock %}
+

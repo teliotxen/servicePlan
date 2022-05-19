@@ -1,0 +1,60 @@
+{% extends 'base/base.html' %}
+{% load widget_tweaks %}
+
+{% block nav-bar %}
+<div>
+    <a href="{% url 'project_list' %}">리스트로 이동</a>
+</div>
+{% endblock %}
+
+===========================================================
+{% block detail %}
+<div>
+1234
+{{ position }}
+    {% if position == 'project' %}
+        <h1>프로젝트 디테일 화면</h1>
+    {% elif position == 'scenario' %}
+        <h1>시나리오 리스트 화면</h1>
+    {% endif %}
+</div>
+<div>
+    <ul>
+        <li>{{ data.title }}</li>
+        <li>{{ data.desc }}</li>
+        <li>{{ data.pk }}</li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block list %}
+<div>
+    <ul>
+        {% for li in list %}
+            <li><a href="{% url 'scenario_detail' li.pk %}">{{ li.title }}</a> </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block input %}
+<div>
+    <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+        {% if position == "comment" %}
+            <div>{{ form.status }}</div>
+        {% else %}
+            <div>{{ form.title }}</div>
+        {% endif %}
+        <div>{{ form.desc|safe }}</div>
+        <div>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+        <div>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+        <div>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+        <div>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+        <div>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+
+        <div id="image_container"></div>
+        <input type="submit" value="제출하기">
+    </form>
+</div>
+{% endblock %}
+

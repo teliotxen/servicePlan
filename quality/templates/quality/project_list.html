@@ -1,0 +1,29 @@
+{% extends 'base/base.html' %}
+
+{% block head %}
+
+{% endblock %}
+{% block nav-bar %}
+    <div>
+        <a href="{% url 'project_input' %}" class="button">프로젝트 만들기</a>
+    </div>
+{% endblock %}
+
+{% block detail %}
+    {% if position == 'project' %}
+        <h1>프로젝트 리스트 화면</h1>
+    {% elif position == 'scenario' %}
+        <h1>시나리오 리스트 화면</h1>
+    {% endif %}
+{% endblock %}
+
+{% block list %}
+    <div>
+        <ul>
+            {% for item in list %}
+                <li><a href="{% url 'project_detail' item.pk %}">{{ item.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+
