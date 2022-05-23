@@ -23,11 +23,19 @@
         <div class="col-md-6"  >
             <div id="listWithHandle" class="list-group">
                 {% for li in list %}
-                    <div class="list-group-item glyphicon glyphicon-move">
-                        <div>
-                            <span class="" aria-hidden="true"></span>
-{#                            <span class="badge">14</span>#}
-                            {{ li.title }}
+                    <div class="list-group-item" data="{{ li.order }}">
+                        <div class="columns">
+                            <div class="col-xs-10">
+                                <a onclick="console.log(123)">
+                                    <p class="center">{{ li.desc }}</p>
+                                </a>
+                            </div>
+                            <div class="col-xs-1">
+                                <button class="btn badge">14</button>
+                            </div>
+                            <div class="col-xs-1 ">
+                                <span class="glyphicon glyphicon-move" aria-hidden="false"></span>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
@@ -60,18 +68,14 @@
 </div>
 
 ===================
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
-
-
-  <!-- Latest Sortable -->
-  <script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
-
-
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <!-- Latest Sortable -->
+    <script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
 
     <script>
 
 
-    // List with handle
+        // List with handle
         Sortable.create(listWithHandle, {
             handle: '.glyphicon-move',
             animation: 150,
@@ -81,6 +85,7 @@
                  * @param   {Sortable}  sortable
                  * @returns {Array}
                  */
+
                 get: function (sortable) {
                     var order = sessionStorage.getItem(order,sortable.options.group.name);
                     return order ? order.split('|') : [];
@@ -94,10 +99,14 @@
                 set: function (sortable) {
                     var order = sortable.toArray();
                     sessionStorage.setItem(sortable.options.group.name, order.join('|'));
+                    console.log(123123)
+                    var tg = document.querySelectorAll('.list-group-item')
+                  for (var tgElement of tg) {
+                    console.log(tgElement.getAttribute('data'))
+                  }
                 }
             }
         });
-
 
     </script>
 {% endblock %}

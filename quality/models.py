@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Block(models.Model):
-    title = models.CharField(max_length=50)
+    order = models.IntegerField(null=True)
     desc = models.TextField()
     image_1 = models.ImageField(upload_to='image/', blank=True, null=True)
     image_2 = models.ImageField(upload_to='image/', blank=True, null=True)
@@ -11,7 +11,6 @@ class Block(models.Model):
     image_5 = models.ImageField(upload_to='image/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
 
 
 class Scenario(models.Model):
@@ -29,6 +28,7 @@ class Scenario(models.Model):
 
 
 class Comments(models.Model):
+
     desc = models.TextField()
     relation = models.ManyToManyField('self')
     block_relation = models.ForeignKey(Block, on_delete=models.CASCADE)

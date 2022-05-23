@@ -59,8 +59,6 @@ def scenario_detail(request, pk):
     comment_form = CommentsForm()
     comments = Comments()
 
-
-
     form = BlockForm()
     context = {
         'form': form,
@@ -69,8 +67,13 @@ def scenario_detail(request, pk):
         'position': 'scenario'
     }
     if request.method == 'POST':
-        print('title' in request.POST.keys())
+        if len(block_lists) == 0:
+            block_order = 1
+        else:
+            block_order = len(block_lists) + 1
+
         saved_data = save_info(request, block)
+        saved_data.order = block_order
         saved_data.save()
 
         data.block_relation.add(saved_data)
