@@ -10,7 +10,7 @@
         <div class="col-md-6">
             <h1>시나리오 디테일</h1>
             <div>
-            {#    <a href="{% url 'project_list' %}">리스트로 이동</a>#}
+                <a href="{% url 'project_list' %}">리스트로 이동</a>
             </div>
             <div>
                 <ul>
@@ -20,21 +20,14 @@
                 </ul>
             </div>
         </div>
-        <div class="col-md-6">
-            <div>
+        <div class="col-md-6"  >
+            <div id="listWithHandle" class="list-group">
                 {% for li in list %}
-                    <div class="card" style="margin-bottom: 10px;">
-                        <h5 class="card-header">{{ li.title }}</h5>
-                        <div class="card-body">
-{#                            <h5 class="card-title">Special title treatment</h5>#}
-                            <p class="card-text">{{ li.desc }}</p>
-                            <div class="btn-group end">
-                                <a href="#" class="btn btn-outline-primary" aria-current="page">Active link</a>
-                            </div>
-                            <div class="btn-group end">
-                                <a href="#" class="btn btn-outline-primary">Link</a>
-                                <a href="#" class="btn btn-outline-primary">Link</a>
-                            </div>
+                    <div class="list-group-item glyphicon glyphicon-move">
+                        <div>
+                            <span class="" aria-hidden="true"></span>
+{#                            <span class="badge">14</span>#}
+                            {{ li.title }}
                         </div>
                     </div>
                 {% endfor %}
@@ -66,10 +59,47 @@
     </div>
 </div>
 
+===================
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+
+
+  <!-- Latest Sortable -->
+  <script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
 
 
 
+    <script>
 
+
+    // List with handle
+        Sortable.create(listWithHandle, {
+            handle: '.glyphicon-move',
+            animation: 150,
+            store: {
+                /**
+                 * Get the order of elements. Called once during initialization.
+                 * @param   {Sortable}  sortable
+                 * @returns {Array}
+                 */
+                get: function (sortable) {
+                    var order = sessionStorage.getItem(order,sortable.options.group.name);
+                    return order ? order.split('|') : [];
+
+                },
+
+                /**
+                 * Save the order of elements. Called onEnd (when the item is dropped).
+                 * @param {Sortable}  sortable
+                 */
+                set: function (sortable) {
+                    var order = sortable.toArray();
+                    sessionStorage.setItem(sortable.options.group.name, order.join('|'));
+                }
+            }
+        });
+
+
+    </script>
 {% endblock %}
 
 {% block list %}

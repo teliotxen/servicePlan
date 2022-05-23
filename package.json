@@ -1,1 +1,22 @@
-{}
+{
+  "name": "serviceplan",
+  "version": "1.0.0",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teliotxen/servicePlan.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/teliotxen/servicePlan/issues"
+  },
+  "homepage": "https://github.com/teliotxen/servicePlan#readme",
+  "description": "",
+  "dependencies": {
+    "sortablejs": "^1.15.0"
+  }
+}

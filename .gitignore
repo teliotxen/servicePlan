@@ -1,14 +1,15 @@
 /servicePlan/utils.py
-/db.sqlite3
-/user_profile/migrations/
-<<<<<<< HEAD
-.idea/
-__pycache__/
+/servicePlan/settings.py
 /quality/migrations/
 /landing/migrations/
-=======
+/db.sqlite3
+/user_profile/migrations/
 venv/
 .idea/
 servicePlan/__pycache__/
+/node_modules/
+package.json
+package-lock.json
 
->>>>>>> 469dd2f3171c62a24b1be53ddbe46fe4d03dfa4f
+
+
