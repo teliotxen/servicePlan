@@ -6,10 +6,15 @@
 /user_profile/migrations/
 venv/
 .idea/
-servicePlan/__pycache__/
+/servicePlan/__pycache__/
+/landing/__pycache__/
+/quality/__pycache__/
+/user_profile/__pycache__/
 /node_modules/
 package.json
 package-lock.json
-
-
+/media/
+.DS_Store
+/landing/.DS_Store
+/quality/.DS_Store
 
