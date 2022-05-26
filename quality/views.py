@@ -117,6 +117,10 @@ def block_input(request):
     return render(request, 'quality/project_input.html', context)
 
 
+def block_update(request, pk):
+    context ={}
+    return render(request, 'quality/blocks.html', context)
+
 # ============= 코멘트 뷰 ===============
 def comment_list(request):
     data = Scenario.objects.all().order_by('-created_at')

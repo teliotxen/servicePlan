@@ -2,11 +2,7 @@
 {% load widget_tweaks %}
 {% load static %}
 
-
-
-
 {% block detail %}
-    {{ data.block_order }}
 <div class="container">
     <div class="row">
         <div class="col-md-6">
@@ -28,7 +24,7 @@
                     <div class="list-group-item" data="{{ li.order }}">
                         <div class="columns">
                             <div class="col-xs-10">
-                                <a onclick="console.log('text click')">
+                                <a onclick="location.href='/procedure/block/update/{{ li.pk }}/'">
                                     <p class="center">{{ li.desc }}</p>
                                 </a>
                             </div>
@@ -80,7 +76,6 @@
 {% endblock %}
 
 {% block script %}
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <script src="{% static 'quality/js/Sortable.js' %}"></script>
     <script type="text/javascript" src="{% static 'quality/js/prettify.js' %}"></script>
 
@@ -144,7 +139,7 @@
                   console.log(result.responseText); //responseText의 에러메세지 확인
 
                 }
-                });
+            });
         }
 
 
