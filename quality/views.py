@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, redirect
 from .forms import ProjectForm, ScenarioForm, BlockForm, CommentsForm
 from .models import Projects, Scenario, Block, Comments
@@ -54,7 +56,7 @@ def project_input(request):
 def scenario_detail(request, pk):
     data = Scenario.objects.get(pk=pk)
     block = Block()
-    block_lists = data.block_relation.all()
+    block_lists = data.block_relation.all().order_by('order')
 
     comment_form = CommentsForm()
     comments = Comments()
@@ -78,6 +80,15 @@ def scenario_detail(request, pk):
 
         data.block_relation.add(saved_data)
         data.save()
+
+        context = {
+            'form': form,
+            'data': data,
+            'list': block_lists,
+            'position': 'scenario'
+        }
+
+        return redirect('scenario_detail', pk)
 
     return render(request, 'quality/scenario_detail.html', context)
 

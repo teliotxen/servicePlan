@@ -23,6 +23,7 @@ class Scenario(models.Model):
     image_5 = models.ImageField(upload_to='image/', blank=True, null=True)
     block_relation = models.ManyToManyField(Block)
     relation = models.ForeignKey('Projects', on_delete=models.CASCADE)
+    block_order = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

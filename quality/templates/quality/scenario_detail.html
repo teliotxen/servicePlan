@@ -4,7 +4,9 @@
 
 
 
+
 {% block detail %}
+    {{ data.block_order }}
 <div class="container">
     <div class="row">
         <div class="col-md-6">
@@ -21,26 +23,22 @@
             </div>
         </div>
         <div class="col-md-6"  >
-            <div id="listWithHandle" class="list-group">
+            <div id="list_order" class="list-group">
                 {% for li in list %}
                     <div class="list-group-item" data="{{ li.order }}">
                         <div class="columns">
                             <div class="col-xs-10">
-                                <a onclick="console.log(123)">
+                                <a onclick="console.log('text click')">
                                     <p class="center">{{ li.desc }}</p>
                                 </a>
                             </div>
-                            <div class="col-xs-1">
-                                <button class="btn badge">14</button>
-                            </div>
-                            <div class="col-xs-1 ">
-                                <span class="glyphicon glyphicon-move" aria-hidden="false"></span>
-                            </div>
+
                         </div>
                     </div>
                 {% endfor %}
             </div>
-            <div>
+            <button class="btn btn-primary" onclick="blockInput()">글 쓰기</button>
+            <div class="block-input-form" style="display: none">
                 <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
                     {% if position == "comment" %}
                         <div>{{ form.status }}</div>
@@ -56,7 +54,7 @@
                     <div>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
                     <div id="image_container"></div>
                     <div>
-                        <input type="submit" value="제출하기">
+                        <input type="submit" value="제출하기" onclick="console.log(123)">
                     </div>
 
                 </form>
@@ -67,48 +65,7 @@
     </div>
 </div>
 
-===================
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
-    <!-- Latest Sortable -->
-    <script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
 
-    <script>
-
-
-        // List with handle
-        Sortable.create(listWithHandle, {
-            handle: '.glyphicon-move',
-            animation: 150,
-            store: {
-                /**
-                 * Get the order of elements. Called once during initialization.
-                 * @param   {Sortable}  sortable
-                 * @returns {Array}
-                 */
-
-                get: function (sortable) {
-                    var order = sessionStorage.getItem(order,sortable.options.group.name);
-                    return order ? order.split('|') : [];
-
-                },
-
-                /**
-                 * Save the order of elements. Called onEnd (when the item is dropped).
-                 * @param {Sortable}  sortable
-                 */
-                set: function (sortable) {
-                    var order = sortable.toArray();
-                    sessionStorage.setItem(sortable.options.group.name, order.join('|'));
-                    console.log(123123)
-                    var tg = document.querySelectorAll('.list-group-item')
-                  for (var tgElement of tg) {
-                    console.log(tgElement.getAttribute('data'))
-                  }
-                }
-            }
-        });
-
-    </script>
 {% endblock %}
 
 {% block list %}
@@ -123,7 +80,75 @@
 {% endblock %}
 
 {% block script %}
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <script src="{% static 'quality/js/Sortable.js' %}"></script>
+    <script type="text/javascript" src="{% static 'quality/js/prettify.js' %}"></script>
 
+    <script>
+        //sortable 설정
+        new Sortable(list_order, {
+            animation: 150,
+            ghostClass: 'blue-background-class',
+            store: {
+                get: function (sortable) {
+                    var order = localStorage.getItem(sortable.options.group.name);
+                    return order ? order.split('|') : [];
+                },
+                set: function (sortable) {
+                    var order = sortable.toArray();
+                    localStorage.setItem(sortable.options.group.name, order.join('|'));
+                    //데이터 저장 로직
+                    var data = {
+                        'pk': {{ data.pk }},
+                        'data': localStorage.getItem(null),
+                    }
+                    postOrderData(data)
+
+                }
+            },
+        });
+        //윈도우 시작할 때 로컬 저장소에 리스트 순서 입력
+        window.onload = function (){
+            var temp = "{{ data.block_order }}"
+            temp = JSON.parse(temp.replace(/&quot;/g,'"'));
+            localStorage.setItem('null',temp)
+
+        }
+
+
+        //버튼 사라짐 세팅
+        function blockInput(){
+            let obj = document.querySelector('.block-input-form')
+            if (obj.style.display == 'none'){
+                 document.querySelector('.block-input-form').style.display='block'
+            }else{
+                 document.querySelector('.block-input-form').style.display='none'
+            }
+
+        }
+
+
+        //서버 데이터 보냄
+        function postOrderData(data) {
+            $.ajax({
+                url: "{% url 'update_block_order' %}",  // serviceKey 값을 xxxxxx에 입력
+                type: "POST",
+                data: JSON.stringify(data), // json 을 string으로 변환하여 전송
+                dataType: "JSON",
+                contentType: "application/json",
+                accept: "application/json",
+                success: function(result) {
+
+                },
+                error: function(result) {
+                  console.log(result.responseText); //responseText의 에러메세지 확인
+
+                }
+                });
+        }
+
+
+    </script>
 
 {% endblock %}
 
