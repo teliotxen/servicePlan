@@ -2,7 +2,7 @@ import json
 
 from django.shortcuts import render, redirect
 from .forms import ProjectForm, ScenarioForm, BlockForm, CommentsForm
-from .models import Projects, Scenario, Block, Comments
+from .models import Projects, Scenario, Block, Comments, Review
 from .utils import save_info
 
 def main(request):
@@ -63,13 +63,25 @@ def scenario_detail(request, pk):
     block = Block()
     block_lists = data.block_relation.all()
     form = BlockForm()
+
+    print(request.get_full_path_info())
+    prm = str(request.get_full_path()).split('=')
+    print(prm)
+
+    if len(prm) == 2:
+        block_id = prm[1]
+        comments_list = Comments.objects.filter(block_relation=block_id)
+        print(comments_list)
+    else:
+        comments_list = Comments.objects.filter(scenario_relation=pk)
+
     context = {
         'form': form,
         'data': data,
         'list': block_lists,
         'position': 'scenario',
         'raw_data': raw_data,
-
+        'comments_list':comments_list,
     }
 
     if request.method == 'POST':
