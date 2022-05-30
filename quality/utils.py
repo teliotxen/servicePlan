@@ -9,7 +9,13 @@ def save_info(request, data):
         pass
 
     try:
-        data.status = req_post.get('status')
+        if req_post.get('status') == 'true':
+            result = True
+        elif req_post.get('status') == 'false':
+            result = False
+        else:
+            result = None
+        data.status = result
     except:
         pass
 

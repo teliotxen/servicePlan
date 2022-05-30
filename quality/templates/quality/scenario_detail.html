@@ -3,38 +3,54 @@
 {% load static %}
 
 {% block detail %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <h1>시나리오 디테일</h1>
-            <div>
-                <a href="{% url 'project_list' %}">리스트로 이동</a>
-            </div>
-            <div>
-                <ul>
-                    <li>{{ data.title }}</li>
-                    <li>{{ data.desc }}</li>
-                    <li>{{ data.pk }}</li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-md-6"  >
-            <div id="list_order" class="list-group">
-                {% for li in list %}
-                    <div class="list-group-item" data="{{ li.order }}">
-                        <div class="columns">
-                            <div class="col-xs-10">
-                                <a onclick="location.href='/procedure/block/update/{{ li.pk }}/'">
-                                    <p class="center">{{ li.desc }}</p>
-                                </a>
-                            </div>
 
+<div class="container">
+    <div class="columns">
+        <div class="column">
+            <article class="panel is-info">
+                <p class="panel-heading">
+                Info
+                </p>
+                <p class="panel-tabs">
+                    {% for dt in raw_data %}
+                        <a class="is-active" href="{% url 'scenario_detail' dt.pk%}">{{ dt.title }}</a>
+                    {% endfor %}
+                </p>
+                <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="panel-block">
+                        <div class="control has-icons-left" style="width: 200%">
+                            {{ form.desc | add_class:"input is-info" }}
+                            <span class="icon is-left">
+                                <i class="fas fa-search" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <div class="control">
+                            <button class="button is-info" type="submit" >
+                                생성하기
+                            </button>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-            <button class="btn btn-primary" onclick="blockInput()">글 쓰기</button>
-            <div class="block-input-form" style="display: none">
+                </form>
+                <div id="list_order" class="list-group">
+                    {% for li in list %}
+                         <a class="panel-block list-group-item is-active" href="{% url 'scenario_detail' data.pk %}">
+                            <span class="panel-icon"><i class="fas fa-book" aria-hidden="true"></i></span>
+                            {{ li.desc }}
+                        </a>
+                    {% endfor %}
+                </div>
+
+            </article>
+
+
+        </div>
+        <div class="column">
+
+
+            {% comment %}
+            <div>
+                <button class="" onclick="blockInput()">글 쓰기</button>
+                <div class="block-input-form" style="display: none">
                 <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
                     {% if position == "comment" %}
                         <div>{{ form.status }}</div>
@@ -55,9 +71,8 @@
 
                 </form>
             </div>
-
+            {% endcomment %}
         </div>
-
     </div>
 </div>
 
@@ -86,12 +101,12 @@
             ghostClass: 'blue-background-class',
             store: {
                 get: function (sortable) {
-                    var order = localStorage.getItem(sortable.options.group.name);
+                    var order = localStorage.getItem({{ data.pk }});
                     return order ? order.split('|') : [];
                 },
                 set: function (sortable) {
                     var order = sortable.toArray();
-                    localStorage.setItem(sortable.options.group.name, order.join('|'));
+                    localStorage.setItem({{ data.pk }}, order.join('|'));
                     //데이터 저장 로직
                     var data = {
                         'pk': {{ data.pk }},
@@ -106,7 +121,11 @@
         window.onload = function (){
             var temp = "{{ data.block_order }}"
             temp = JSON.parse(temp.replace(/&quot;/g,'"'));
-            localStorage.setItem('null',temp)
+            if(localStorage.getItem({{ data.pk }})){
+
+            }else{
+                localStorage.setItem({{ data.pk }},temp)
+            }
 
         }
 

@@ -17,7 +17,7 @@ class ScenarioForm(forms.ModelForm):
 class BlockForm(forms.ModelForm):
     class Meta:
         model = Block
-        fields = ['order', 'desc', 'image_1', 'image_2', 'image_3', 'image_4', 'image_5']
+        fields = ['desc']
 
 
 class CommentsForm(forms.ModelForm):

@@ -18,6 +18,9 @@ def project_list(request):
 def project_detail(request, pk):
     data = Projects.objects.get(pk=pk)
     scenario = Scenario.objects.filter(relation=data)
+
+    request.session['scenario_data'] = data.pk
+
     form = ScenarioForm()
     context = {
         'data': data,
@@ -54,40 +57,26 @@ def project_input(request):
 
 # ============= 시나리오 뷰 ===============
 def scenario_detail(request, pk):
-    data = Scenario.objects.get(pk=pk)
+    dt = Projects.objects.get(pk=request.session['scenario_data'])
+    raw_data = Scenario.objects.filter(relation=dt)
+    data = raw_data.get(pk=pk)
     block = Block()
-    block_lists = data.block_relation.all().order_by('order')
-
-    comment_form = CommentsForm()
-    comments = Comments()
-
+    block_lists = data.block_relation.all()
     form = BlockForm()
     context = {
         'form': form,
         'data': data,
         'list': block_lists,
-        'position': 'scenario'
+        'position': 'scenario',
+        'raw_data': raw_data,
+
     }
+
     if request.method == 'POST':
-        if len(block_lists) == 0:
-            block_order = 1
-        else:
-            block_order = len(block_lists) + 1
-
         saved_data = save_info(request, block)
-        saved_data.order = block_order
         saved_data.save()
-
         data.block_relation.add(saved_data)
         data.save()
-
-        context = {
-            'form': form,
-            'data': data,
-            'list': block_lists,
-            'position': 'scenario'
-        }
-
         return redirect('scenario_detail', pk)
 
     return render(request, 'quality/scenario_detail.html', context)
