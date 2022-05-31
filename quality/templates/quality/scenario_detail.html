@@ -2,8 +2,47 @@
 {% load widget_tweaks %}
 {% load static %}
 
+{% block head %}
+{% endblock %}
+
 {% block detail %}
 
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+            <label for="floatingTextarea2">Comments</label>
+        </div>
+        <div class="list-group" id="list_order">
+            {% comment %}
+                 if an item was activated, add class 'active'
+            {% endcomment %}
+
+            {% for li in list %}
+                <a class="list-group-item list-group-item-action " href="{% url 'scenario_detail' data.pk %}?keyword={{ li.pk }}">
+                    <div class="d-flex w-100 justify-content-between">
+{#                        <small class="text-muted">{{ li.created_at }}</small>#}
+                    </div>
+                    <p class="mb-1">{{ li.desc }}</p>
+                    <small class="text-muted">{{ li.created_at }}</small>
+                </a>
+            {% endfor %}
+
+
+        </div>
+    </div>
+    <div class="col-sm-6">
+        {% if comments_list %}
+            {% for comments in comments_list %}
+                {{ comments.desc }}
+            {% endfor %}
+        {% else %}
+            <p>아직 코멘트가 없습니다.</p>
+        {% endif %}
+
+    </div>
+</div>
+{% comment %}
 <div class="container">
     <div class="columns">
         <div class="column">
@@ -44,41 +83,67 @@
 
 
         </div>
-        <div class="column">
-            {% for comments in comments_list %}
-            <article class="media">
-                <figure class="media-left">
-                    <p class="image is-64x64">
-                        <img src="https://bulma.io/images/placeholders/128x128.png">
-                    </p>
-                </figure>
-                <div class="media-content">
-                    <div class="content">
-                        <p>
-                            <strong>John Smith</strong> <small>@johnsmith</small> <small>31m</small>
-                            <br>
-                            {{ comments.desc }}
+        <div class="column" data-allow-multiple="false">
+            {% if comments_list %}
+                {% for comments in comments_list %}
+                    <div class="card">
+                        <header class="card-header">
+                        <p class="card-header-title">
+                        Card title
                         </p>
-                    </div>
-                    <nav class="level is-mobile">
-                        <div class="level-left">
-                            <a class="level-item">
-                                <span class="icon is-small"><i class="fas fa-reply"></i></span>
-                            </a>
-                            <a class="level-item">
-                                <span class="icon is-small"><i class="fas fa-retweet"></i></span>
-                            </a>
-                                <a class="level-item">
-                            <span class="icon is-small"><i class="fas fa-heart"></i></span>
-                            </a>
+                        <a href="#collapsible-card" data-action="collapse" class="card-header-icon is-hidden-fullscreen" aria-label="more options">
+                        <span class="icon">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                        </a>
+                        </header>
+                        <div id="collapsible-card" class="is-collapsible is-active">
+                        <div class="card-content">
+                        <p class="title is-4">
+                        “There are two hard things in computer science: cache invalidation, naming things, and off-by-one
+                        errors.”
+                        </p>
+                        <p class="subtitle is-5">
+                        Jeff Atwood
+                        </p>
                         </div>
-                    </nav>
+                        <footer class="card-footer">
+                        <p class="card-footer-item">
+                        <span>
+                        View on <a href="https://twitter.com/codinghorror/status/506010907021828096">Twitter</a>
+                        </span>
+                        </p>
+                        <p class="card-footer-item">
+                        <span>
+                        Share on <a href="#">Facebook</a>
+                        </span>
+                        </p>
+                        </footer>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>아직 코멘트가 없습니다.</p>
+            {% endif %}
+                <div>
+                    <button class="" onclick="blockInput()">글 쓰기</button>
+                    <div class="block-input-form" style="display: none">
+                        <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
+                            {% if position == "comment" %}
+                                <div>{{ form.status }}</div>
+                            {% else %}
+                                <div>{{ form.title }}</div>
+                            {% endif %}
+
+                            <div>{{ form.desc|safe }}</div>
+
+                            <div>
+                                <input type="submit" value="제출하기" onclick="console.log(123)">
+                            </div>
+
+                        </form>
+                    </div>
                 </div>
-                <div class="media-right">
-                    <button class="delete"></button>
-                </div>
-            </article>
-            {% endfor %}
             {% comment %}
             <div>
                 <button class="" onclick="blockInput()">글 쓰기</button>
@@ -103,11 +168,11 @@
 
                 </form>
             </div>
-            {% endcomment %}
+
         </div>
     </div>
 </div>
-
+{% endcomment %}
 
 {% endblock %}
 
@@ -125,14 +190,13 @@
 {% block script %}
     <script src="{% static 'quality/js/Sortable.js' %}"></script>
     <script type="text/javascript" src="{% static 'quality/js/prettify.js' %}"></script>
-
     <script>
         //sortable 설정
         new Sortable(list_order, {
             animation: 150,
             ghostClass: 'blue-background-class',
             store: {
-                get: function (sortable) {
+                get: function () {
                     var order = localStorage.getItem({{ data.pk }});
                     return order ? order.split('|') : [];
                 },
