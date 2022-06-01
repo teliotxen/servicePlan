@@ -1,6 +1,7 @@
 from django.db import models
 from user_profile.models import User
 
+
 class Block(models.Model):
     writer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     desc = models.CharField(max_length=255, null=True)
@@ -24,8 +25,9 @@ class Scenario(models.Model):
 
 
 class Comments(models.Model):
+    writer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     desc = models.TextField()
-    block_relation = models.ForeignKey(Block, on_delete=models.CASCADE)
+    block_relation = models.ForeignKey(Block, on_delete=models.CASCADE, null=True)
     scenario_relation = models.ForeignKey(Scenario, on_delete=models.CASCADE)
     status = models.BooleanField(null=True, default=None)
     image_1 = models.ImageField(upload_to='image/', blank=True, null=True)
@@ -38,6 +40,7 @@ class Comments(models.Model):
 
 
 class Review(models.Model):
+    writer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     desc = models.TextField()
     block_relation = models.ForeignKey(Block, on_delete=models.CASCADE)
     scenario_relation = models.ForeignKey(Scenario, on_delete=models.CASCADE)

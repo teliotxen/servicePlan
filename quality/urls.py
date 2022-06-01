@@ -27,6 +27,7 @@ urlpatterns = [
     path('scenario/input/', views.scenario_input, name='scenario_input'),
     path('scenario/list/', views.scenario_input, name='scenario_list'),
     path('scenario/deatil/<int:pk>/', views.scenario_detail, name='scenario_detail'),
+    path('scenario/deatil/<int:pk0>/<int:pk1>/', views.scenario_detail_block, name='scenario_detail_block'),
 
     path('block/input/', views.scenario_input, name='block_input'),
     path('block/list/', views.block_input, name='block_list'),

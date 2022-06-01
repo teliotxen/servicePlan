@@ -63,20 +63,12 @@ def scenario_detail(request, pk):
     block = Block()
     block_lists = data.block_relation.all()
     form = BlockForm()
-
-    print(request.get_full_path_info())
-    prm = str(request.get_full_path()).split('=')
-    print(prm)
-
-    if len(prm) == 2:
-        block_id = prm[1]
-        comments_list = Comments.objects.filter(block_relation=block_id)
-        print(comments_list)
-    else:
-        comments_list = Comments.objects.filter(scenario_relation=pk)
+    comment_form = CommentsForm()
+    comments_list = Comments.objects.filter(scenario_relation=pk)
 
     context = {
         'form': form,
+        'comment_form': comment_form,
         'data': data,
         'list': block_lists,
         'position': 'scenario',
@@ -85,11 +77,64 @@ def scenario_detail(request, pk):
     }
 
     if request.method == 'POST':
-        saved_data = save_info(request, block)
-        saved_data.save()
-        data.block_relation.add(saved_data)
-        data.save()
+        key_counter = request.POST.keys()
+        print(request.POST)
+        if len(key_counter) == 2:
+            saved_data = save_info(request, block)
+            saved_data.save()
+            data.block_relation.add(saved_data)
+            data.save()
+        else:
+            comment = Comments()
+            comment.scenario_relation = Scenario.objects.get(pk=pk)
+            saved_data = save_info(request, comment)
+            saved_data.save()
         return redirect('scenario_detail', pk)
+
+    return render(request, 'quality/scenario_detail.html', context)
+
+
+def scenario_detail_block(request, **kwargs):
+    scenario_id = kwargs['pk0']
+    block_id = kwargs['pk1']
+    project_id = Projects.objects.get(pk=request.session['scenario_data'])
+    raw_data = Scenario.objects.filter(relation=project_id)
+    block_item = Block.objects.get(pk=block_id)
+    data = raw_data.get(pk=scenario_id)
+    block = Block()
+    block_lists = data.block_relation.all()
+    form = BlockForm()
+    comment_form = CommentsForm()
+
+    comments_list = Comments.objects.filter(block_relation=block_id)
+
+    print(block_item.desc)
+    context = {
+        'block_item':block_item,
+        'form': form,
+        'comment_form': comment_form,
+        'data': data,
+        'list': block_lists,
+        'position': 'scenario',
+        'raw_data': raw_data,
+        'comments_list':comments_list,
+    }
+
+    if request.method == 'POST':
+        key_counter = request.POST.keys()
+        print(request.POST)
+        if len(key_counter) == 2:
+            saved_data = save_info(request, block)
+            saved_data.save()
+            data.block_relation.add(saved_data)
+            data.save()
+        else:
+            comment = Comments()
+            comment.block_relation = Block.objects.get(pk=block_id)
+            comment.scenario_relation = Scenario.objects.get(pk=scenario_id)
+            saved_data = save_info(request, comment)
+            saved_data.save()
+        return redirect(f'/procedure/scenario/deatil/{scenario_id}/{block_id}/')
 
     return render(request, 'quality/scenario_detail.html', context)
 

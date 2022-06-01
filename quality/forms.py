@@ -2,6 +2,7 @@ from django import forms
 from .models import Projects, Scenario, Block, Comments
 
 
+
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Projects

@@ -19,6 +19,8 @@ from landing import views
 
 
 urlpatterns = [
-    path('', views.landing, name='home')
+    path('', views.landing, name='home'),
+    path('test/', views.test, name='test'),
+    path('test/<int:pk>/<int:pk1>/', views.doubles, name='double')
 
 ]
