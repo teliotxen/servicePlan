@@ -15,8 +15,8 @@
                 <div class="control has-icons-left" style="width: 100%">
                     {{ form.desc | add_class:"form-control" |attr:"placeholder:hello"}}
                 </div>
-                <div class="control">
-                    <button class="button is-info" type="submit" >
+                <div class="control float-right">
+                    <button class="btn btn-sm btn-secondary" type="submit" >
                         생성하기
                     </button>
                 </div>
@@ -71,21 +71,37 @@
 
         <hr>
         <div>
+
             {% if comments_list %}
                 {% for comments in comments_list %}
                     <div class="card mb-3" style="max-width: 800px;">
-                        <div class="card-header">{{ comments.writer }}</div>
+                        <div class="card-header">
+                            <span>{{ comments.writer }}</span>
+                        </div>
                         <div class="card-body">
+
                             <p class="card-text">{{ comments.desc }}</p>
 
+
                         </div>
-                        {% if comments.image_1 %}
+
                             <div class="card-footer bg-transparent border-success">
+                                {% if comments.image_1 %}
                                 <a class="btn btn-sm" data-bs-toggle="collapse" href="#col_id_{{ comments.pk }}" role="button" aria-expanded="false" aria-controls="collapseExample">
                                     사진보기
                                 </a>
+                                {% endif %}
+                                <button type="button" class="btn btn-sm btn-primary position-relative">
+                                    댓글
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        10
+                                    <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </button>
                             </div>
-                        {% endif %}
+
+
+
 
                         <div class="collapse" id="col_id_{{ comments.pk }}">
                             {% if comments.image_1 %}
