@@ -5,13 +5,31 @@
 {% block head %}
 {% endblock %}
 
+{% block nav %}
+    <a href="{% url 'project_detail' project_id%}">뒤로가기</a>
+{% endblock %}
+
 {% block detail %}
+
+<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas with body scrolling</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <p>Try scrolling the rest of the page to see this option in action.</p>
+  </div>
+</div>
+
+
 
 <div class="row">
     <div class="col-sm-6 overflow-auto">
         <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
             <div class="form-floating">
-
+                <input type="hidden" name="type"  value="block">
                 <div class="control has-icons-left" style="width: 100%">
                     {{ form.desc | add_class:"form-control" |attr:"placeholder:hello"}}
                 </div>
@@ -41,96 +59,146 @@
         </div>
     </div>
     <div class="col-sm-6 overflow-auto">
-
-        <p>{{ block_item.desc }}</p>
-        <p>{{ block_item.created_at }}</p>
-        <p>{{ block_item.updated_at }}</p>
-        <p>수정하기</p>
-        <p>삭제하기</p>
-        <hr>
-        <div>
-            <a class="btn btn-sm" data-bs-toggle="collapse" href="#write_comments" role="button" aria-expanded="false" aria-controls="collapseExample">
-                comment 쓰기
-            </a>
-        </div>
-        <div class="collapse" id="write_comments">
-            <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
-                <div>{{ comment_form.status |add_class:"form-select"}}</div>
-                <div>{{ comment_form.desc |add_class:"form-control"}}</div>
-                <div id="image_container"></div>
-                <div>{{ comment_form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-                <div>{{ comment_form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-                <div>{{ comment_form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-                <div>{{ comment_form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-                <div>{{ comment_form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-                <div>
-                    <input class="btn btn-primary" type="submit" value="제출하기" onclick="console.log(123)">
-                </div>
-            </form>
-        </div>
-
-        <hr>
-        <div>
-
-            {% if comments_list %}
-                {% for comments in comments_list %}
-                    <div class="card mb-3" style="max-width: 800px;">
-                        <div class="card-header">
-                            <span>{{ comments.writer }}</span>
-                        </div>
-                        <div class="card-body">
-
-                            <p class="card-text">{{ comments.desc }}</p>
-
-
-                        </div>
-
-                            <div class="card-footer bg-transparent border-success">
-                                {% if comments.image_1 %}
-                                <a class="btn btn-sm" data-bs-toggle="collapse" href="#col_id_{{ comments.pk }}" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                    사진보기
-                                </a>
-                                {% endif %}
-                                <button type="button" class="btn btn-sm btn-primary position-relative">
-                                    댓글
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        10
-                                    <span class="visually-hidden">unread messages</span>
-                                    </span>
-                                </button>
-                            </div>
-
-
-
-
-                        <div class="collapse" id="col_id_{{ comments.pk }}">
-                            {% if comments.image_1 %}
-                                <img src="{{ comments.image_1.url }}" class="img-fluid" alt="...">
-                            {% endif %}
-                            {% if comments.image_2 %}
-                                <img src="{{ comments.image_2.url }}" class="img-fluid" alt="...">
-                            {% endif %}
-                            {% if comments.image_3 %}
-                                <img src="{{ comments.image_3.url }}" class="img-fluid" alt="...">
-                            {% endif %}
-                            {% if comments.image_4 %}
-                                <img src="{{ comments.image_4.url }}" class="img-fluid" alt="...">
-                            {% endif %}
-                            {% if comments.image_5 %}
-                                <img src="{{ comments.image_5.url }}" class="img-fluid" alt="...">
-                            {% endif %}
-
-                        </div>
+        {% if block_id %} {% comment %} 블럭 화면인 경우 {% endcomment %}
+            <p>{{ block_item.desc }}</p>
+            <p>{{ block_item.created_at }}</p>
+            <p>{{ block_item.updated_at }}</p>
+            <a href="{% url 'block_update' scenario_id block_id %}">수정하기</a>
+            <a href="{% url 'confirm' scenario_id block_id  %}?type=block">삭제하기</a>
+            <hr>
+            <div>
+                <a class="btn btn-sm" data-bs-toggle="collapse" href="#write_comments" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    comment 쓰기
+                </a>
+            </div>
+            <div class="collapse" id="write_comments">
+                <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
+                    <input type="hidden" name="type"  value="comment">
+                    <div>{{ comment_form.status |add_class:"form-select"}}</div>
+                    <div>{{ comment_form.desc |add_class:"form-control"}}</div>
+                    <div id="image_container"></div>
+                    <div>{{ comment_form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+                    <div>{{ comment_form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+                    <div>{{ comment_form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+                    <div>{{ comment_form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+                    <div>{{ comment_form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+                    <div>
+                        <input class="btn btn-primary" type="submit" value="제출하기" onclick="console.log(123)">
                     </div>
-                {% endfor %}
+                </form>
+            </div>
+            <hr>
+            <div>
+                {% if comments_list %}
+                    {% for comments in comments_list %}
+                        <div class="card mb-3" style="max-width: 800px;">
+                            <div class="card-header">
+                                <span>{{ comments.writer }}</span>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">{{ comments.desc }}</p>
+                            </div>
+                                <div class="card-footer bg-transparent border-success">
+                                    {% if comments.image_1 %}
+                                        <a class="btn btn-sm" data-bs-toggle="collapse" href="#col_id_{{ comments.pk }}" role="button" aria-expanded="false" aria-controls="collapseExample">사진보기</a>
+                                    {% endif %}
+                                    {% if scenario_id %}
+                                        <a href="{% url 'confirm' scenario_id comments.pk %}?type=comments" class="btn btn-sm btn-primary position-relative" >삭제</a>
+                                    {% endif %}
+                                    <button type="button" class="btn btn-sm btn-primary position-relative" onclick="reviewCreate({{ comments.pk }})">
+                                        댓글
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            10
+                                        <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    </button>
 
-        {% else %}
-            <p>아직 코멘트가 없습니다.</p>
+                                </div>
+                            <div class="collapse" id="col_id_{{ comments.pk }}">
+                                {% if comments.image_1 %}
+                                    <img src="{{ comments.image_1.url }}" class="img-fluid" alt="...">
+                                {% endif %}
+                                {% if comments.image_2 %}
+                                    <img src="{{ comments.image_2.url }}" class="img-fluid" alt="...">
+                                {% endif %}
+                                {% if comments.image_3 %}
+                                    <img src="{{ comments.image_3.url }}" class="img-fluid" alt="...">
+                                {% endif %}
+                                {% if comments.image_4 %}
+                                    <img src="{{ comments.image_4.url }}" class="img-fluid" alt="...">
+                                {% endif %}
+                                {% if comments.image_5 %}
+                                    <img src="{{ comments.image_5.url }}" class="img-fluid" alt="...">
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+            {% else %}
+                <p>아직 코멘트가 없습니다.</p>
+            {% endif %}
+
+            </div>
+            <hr>
+
+        {% else %} {% comment %} 시나리오 화면인 경우 {% endcomment %}
+            {% if data.image_1 %}
+                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% if data.image_1 %}
+                            <div class="carousel-item active">
+                                <a href="{{ data.image_1.url }}" data-toggle="lightbox">
+                                    <img src="{{ data.image_1.url }}" class="d-block w-100" alt="...">
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% if data.image_2 %}
+                            <div class="carousel-item">
+                                <a href="{{ data.image_2.url }}" data-toggle="lightbox">
+                                    <img src="{{ data.image_2.url }}" class="d-block w-100" alt="...">
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% if data.image_3 %}
+                            <div class="carousel-item ">
+                                <a href="{{ data.image_3.url }}" data-toggle="lightbox">
+                                    <img src="{{ data.image_3.url }}" class="d-block w-100" alt="...">
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% if data.image_4 %}
+                            <div class="carousel-item ">
+                                <a href="{{ data.image_4.url }}" data-toggle="lightbox">
+                                    <img src="{{ data.image_4.url }}" class="d-block w-100" alt="...">
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% if data.image_5 %}
+                            <div class="carousel-item ">
+                                <a href="{{ data.image_5.url }}" data-toggle="lightbox">
+                                    <img src="{{ data.image_5.url }}" class="d-block w-100" alt="...">
+                                </a>
+                            </div>
+                        {% endif %}
+
+
+                    </div>
+                    {% if data.image_2 %}
+
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true" style="color: black;"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+
         {% endif %}
-
-        </div>
-        <hr>
-
     </div>
 </div>
 
@@ -151,15 +219,21 @@
 {% block script %}
     <script src="{% static 'quality/js/Sortable.js' %}"></script>
     <script type="text/javascript" src="{% static 'quality/js/prettify.js' %}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.0/dist/index.bundle.min.js"></script>
     <script>
-        initPictureUpload()
-        function initPictureUpload(){
-            let attached = document.querySelectorAll('.attached')
-            for (i=1; i<5; i++){
-                attached[i].style.display = 'none'
-            }
+        function reviewCreate(pk){
+            window.open('/procedure/comment/input/{{ scenario_id }}/{{ block_id }}/'+pk+'/', "_self")
         }
+
+        {% if block_id %}
+            initPictureUpload()
+            function initPictureUpload(){
+                let attached = document.querySelectorAll('.attached')
+                for (i=1; i<5; i++){
+                    attached[i].style.display = 'none'
+                }
+            }
+        {% endif %}
         //sortable 설정
         new Sortable(list_order, {
             animation: 150,
@@ -183,22 +257,9 @@
             },
         });
         //윈도우 시작할 때 로컬 저장소에 리스트 순서 입력
-        window.onload = function (){
-            var temp = "{{ data.block_order }}"
-            temp = JSON.parse(temp.replace(/&quot;/g,'"'));
-            if(localStorage.getItem({{ data.pk }})){
-
-            }else{
-                localStorage.setItem({{ data.pk }},temp)
-            }
-
-        }
-
-        function activeSelector(){
-
-        }
 
 
+        function activeSelector(){}
 
         //서버 데이터 보냄
         function postOrderData(data) {
@@ -210,14 +271,27 @@
                 contentType: "application/json",
                 accept: "application/json",
                 success: function(result) {
-
                 },
                 error: function(result) {
                   console.log(result.responseText); //responseText의 에러메세지 확인
-
                 }
             });
         }
+        if (typeof({{ data.block_order }})!= null){
+            console.log(true)
+        }else{
+            window.onload = function (){
+                var temp = "{{ data.block_order }}"
+                temp = JSON.parse(temp.replace(/&quot;/g,'"'));
+                if(localStorage.getItem({{ data.pk }})){
+
+                }else{
+                    localStorage.setItem({{ data.pk }},temp)
+                }
+            }
+        }
+
+
 
 
     </script>

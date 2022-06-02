@@ -1,5 +1,5 @@
 from django import forms
-from .models import Projects, Scenario, Block, Comments
+from .models import Projects, Scenario, Block, Comments, Review
 
 
 
@@ -24,4 +24,10 @@ class BlockForm(forms.ModelForm):
 class CommentsForm(forms.ModelForm):
     class Meta:
         model = Comments
+        fields = ['desc', 'status', 'image_1', 'image_2', 'image_3', 'image_4', 'image_5']
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
         fields = ['desc', 'status', 'image_1', 'image_2', 'image_3', 'image_4', 'image_5']

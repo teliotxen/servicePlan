@@ -12,6 +12,7 @@ class Block(models.Model):
 class Scenario(models.Model):
     title = models.CharField(max_length=50)
     desc = models.TextField()
+    drawio = models.CharField(max_length=500, null=True, default=None)
     image_1 = models.ImageField(upload_to='image/', blank=True, null=True)
     image_2 = models.ImageField(upload_to='image/', blank=True, null=True)
     image_3 = models.ImageField(upload_to='image/', blank=True, null=True)
@@ -44,6 +45,7 @@ class Review(models.Model):
     desc = models.TextField()
     block_relation = models.ForeignKey(Block, on_delete=models.CASCADE)
     scenario_relation = models.ForeignKey(Scenario, on_delete=models.CASCADE)
+    comment_relation = models.ForeignKey(Comments, on_delete=models.CASCADE, null=True)
     status = models.BooleanField(null=True, default=None)
     image_1 = models.ImageField(upload_to='image/', blank=True, null=True)
     image_2 = models.ImageField(upload_to='image/', blank=True, null=True)

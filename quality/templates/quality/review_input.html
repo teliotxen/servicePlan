@@ -1,0 +1,48 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block nav %}
+    <a href="{% url 'scenario_detail_block' scenario_id block_id%}">뒤로가기</a>
+{% endblock %}
+{% block contents %}
+
+{% for review in review_list %}
+    <p>{{ review.desc }}</p>
+
+{% endfor %}
+
+
+{{ data.desc }}
+
+<form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
+    <input type="hidden" name="type"  value="comment">
+    <div>{{ form.status |add_class:"form-select"}}</div>
+    <div>{{ form.desc |add_class:"form-control"}}</div>
+    <div id="image_container"></div>
+    <div>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+    <div>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+    <div>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+    <div>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+    <div>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+    <div>
+        <input class="btn btn-primary" type="submit" value="제출하기" onclick="console.log(123)">
+    </div>
+</form>
+{% endblock %}
+
+
+
+
+{% block script %}
+<script>
+    initPictureUpload()
+    function initPictureUpload(){
+        let attached = document.querySelectorAll('.attached')
+        for (i=1; i<5; i++){
+            attached[i].style.display = 'none'
+        }
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block contents %}
+<form method="POST"  enctype="multipart/form-data">{% csrf_token %}
+    {{ type }}
+    {{ pk0 }}
+    {{ pk1 }}
+    {% if type == 'block'%}
+        <a href="{% url 'scenario_detail_block' pk0 pk1 %}">취소</a>
+    {% elif type == 'comments' %}
+        <a href="{% url 'scenario_detail_block' pk0 pk2 %}">취소</a>
+    {% endif %}
+
+    <button type="submit">확인</button>
+</form>
+{% endblock %}

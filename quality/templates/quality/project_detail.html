@@ -39,18 +39,21 @@
 
 {% block input %}
 <div>
+    <a class="btn btn-sm" data-bs-toggle="collapse" href="#write_comments" role="button" aria-expanded="false" aria-controls="collapseExample">
+        시나리오 만들기
+    </a>
+</div>
+<div class="collapse" id="write_comments">
     <form method="POST" enctype="multipart/form-data">{% csrf_token %}
-        {% if position == "comment" %}
-            <div>{{ form.status }}</div>
-        {% else %}
-            <div>{{ form.title }}</div>
-        {% endif %}
-        <div>{{ form.desc|safe }}</div>
-        <div>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
-        <div>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
-        <div>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
-        <div>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
-        <div>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached" }}</div>
+
+        <div>{{ form.title |add_class:"form-control"}}</div>
+        <div>{{ form.desc|add_class:"form-control" }}</div>
+
+        <div>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+        <div>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+        <div>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control " }}</div>
+        <div>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+        <div>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
 
         <div id="image_container"></div>
         <input type="submit" value="제출하기">
@@ -58,3 +61,16 @@
 </div>
 {% endblock %}
 
+
+{% block script %}
+<script>
+    initPictureUpload()
+    function initPictureUpload(){
+        let attached = document.querySelectorAll('.attached')
+        for (i=1; i<5; i++){
+            attached[i].style.display = 'none'
+        }
+    }
+</script>
+
+{% endblock %}

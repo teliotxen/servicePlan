@@ -1,7 +1,7 @@
 import json
 
 from django.shortcuts import render, redirect
-from .forms import ProjectForm, ScenarioForm, BlockForm, CommentsForm
+from .forms import ProjectForm, ScenarioForm, BlockForm, CommentsForm, ReviewForm
 from .models import Projects, Scenario, Block, Comments, Review
 from .utils import save_info
 
@@ -46,10 +46,8 @@ def project_input(request):
     }
 
     if request.method == "POST":
-
         saved_data = save_info(request, data)
         saved_data.save()
-        # request.session['last_position'] = 'project'
         return redirect('project_list')
 
     return render(request, 'quality/project_input.html', context)
@@ -57,8 +55,8 @@ def project_input(request):
 
 # ============= 시나리오 뷰 ===============
 def scenario_detail(request, pk):
-    dt = Projects.objects.get(pk=request.session['scenario_data'])
-    raw_data = Scenario.objects.filter(relation=dt)
+    project_id = Projects.objects.get(pk=request.session['scenario_data'])
+    raw_data = Scenario.objects.filter(relation=project_id)
     data = raw_data.get(pk=pk)
     block = Block()
     block_lists = data.block_relation.all()
@@ -73,13 +71,12 @@ def scenario_detail(request, pk):
         'list': block_lists,
         'position': 'scenario',
         'raw_data': raw_data,
-        'comments_list':comments_list,
+        'comments_list': comments_list,
+        'project_id': project_id.pk,
     }
 
     if request.method == 'POST':
-        key_counter = request.POST.keys()
-        print(request.POST)
-        if len(key_counter) == 2:
+        if request.POST['type'] == 'block':
             saved_data = save_info(request, block)
             saved_data.save()
             data.block_relation.add(saved_data)
@@ -108,7 +105,6 @@ def scenario_detail_block(request, **kwargs):
 
     comments_list = Comments.objects.filter(block_relation=block_id)
 
-    print(block_item.desc)
     context = {
         'block_item':block_item,
         'form': form,
@@ -118,12 +114,13 @@ def scenario_detail_block(request, **kwargs):
         'position': 'scenario',
         'raw_data': raw_data,
         'comments_list':comments_list,
+        'scenario_id':scenario_id,
+        'block_id':block_id,
+        'project_id':project_id.pk
     }
 
     if request.method == 'POST':
-        key_counter = request.POST.keys()
-        print(request.POST)
-        if len(key_counter) == 2:
+        if request.POST['type'] == 'block':
             saved_data = save_info(request, block)
             saved_data.save()
             data.block_relation.add(saved_data)
@@ -163,22 +160,92 @@ def block_input(request):
     return render(request, 'quality/project_input.html', context)
 
 
-def block_update(request, pk):
-    context ={}
+def block_update(request, **kwargs):
+    scenario_id = kwargs['pk0']
+    block_id = kwargs['pk1']
+    block_item = Block.objects.get(pk=block_id)
+    form = BlockForm(instance=block_item)
+
+    if request.method == 'POST':
+        block_item.desc = request.POST['desc']
+        block_item.save()
+        return redirect(f'/procedure/scenario/deatil/{scenario_id}/{block_id}/')
+
+    context = {
+        'form':form,
+        'scenario_id':scenario_id,
+        'block_id':block_id,
+    }
+
     return render(request, 'quality/blocks.html', context)
 
-# ============= 코멘트 뷰 ===============
+# ============= 리뷰 뷰 ===============
 def comment_list(request):
     data = Scenario.objects.all().order_by('-created_at')
     return render(request, 'quality/project_list.html', context={'list': data, 'position': 'comment'})
 
 
-def comment_input(request):
-    form = CommentsForm()
+def comment_input(request, **kwargs):
+    scenario_id = kwargs['pk0']
+    block_id = kwargs['pk1']
+    comment_id = kwargs['pk2']
+    data = Comments.objects.get(pk=comment_id)
+    review_list = Review.objects.filter(comment_relation=data)
+
+    form = ReviewForm()
     context = {
+        'data': data,
         'form': form,
-        'position': 'comment',
+        'scenario_id': scenario_id,
+        'block_id': block_id,
+        'position': 'review',
+        'review_list': review_list,
     }
-    return render(request, 'quality/project_input.html', context)
+
+    if request.method == "POST":
+        review_data = Review()
+
+        review_data.writer = request.user
+        review_data.block_relation_id = block_id
+        review_data.scenario_relation_id = scenario_id
+        review_data.comment_relation_id = comment_id
+        saved_data = save_info(request, review_data)
+        saved_data.save()
+
+        return redirect(f'/procedure/comment/input/{scenario_id}/{block_id}/{comment_id}/')
+    return render(request, 'quality/review_input.html', context)
 
 
+def confirm(request, **kwargs):
+    pk0 = kwargs['pk0'] #scenario
+    pk1 = kwargs['pk1'] #comment
+    type_sort = request.get_full_path().split('?')[1].split('=')[1]
+
+    if request.method == 'POST':
+        if type_sort == 'block':
+            obj = Block.objects.get(pk=pk1)
+            obj.delete()
+            return redirect(f'/procedure/scenario/deatil/{pk0}/')
+
+        elif type_sort == 'comments':
+            obj = Comments.objects.get(pk=pk1)
+            obj.delete()
+            return redirect(f'/procedure/scenario/deatil/{pk0}/{obj.block_relation.pk}/')
+
+    context = {
+        'pk0': pk0,
+        'pk1': pk1,
+        'type': type_sort
+    }
+
+    if type_sort == 'comments':
+        dummy = Comments.objects.get(pk=pk1)
+        pk2 = dummy.block_relation.pk
+        context = {
+            'pk0': pk0,
+            'pk1': pk1,
+            'pk2': pk2,
+            'type': type_sort
+        }
+
+    return render(request, 'quality/confirm.html', context)

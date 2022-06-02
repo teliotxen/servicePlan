@@ -31,9 +31,11 @@ urlpatterns = [
 
     path('block/input/', views.block_input, name='block_input'),
     path('block/list/', views.block_list, name='block_list'),
-    path('block/update/<int:pk>/', views.block_update, name='block_update'),
+    path('block/update/<int:pk0>/<int:pk1>/', views.block_update, name='block_update'),
 
-    path('comment/input/', views.scenario_input, name='comment_input'),
+    path('comment/input/<int:pk0>/<int:pk1>/<int:pk2>/', views.comment_input, name='comment_input'),
     path('comment/list/', views.comment_input, name='comment_list'),
+
+    path('confirm/<int:pk0>/<int:pk1>/', views.confirm, name='confirm')
 ]
 

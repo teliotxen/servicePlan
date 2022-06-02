@@ -2,7 +2,29 @@
 {% load static %}
 {% load widget_tweaks %}
 
+{% block nav-bar %}
+    <a href="{% url 'scenario_detail_block' scenario_id block_id%}">뒤로가기</a>
+{% endblock %}
 {% block contents %}
 
+<div class="container">
 
+    <div>
+        {{ scenario_id }}
+        {{ block_id }}
+    </div>
+    <div>
+        <form method="POST" name="form" enctype="multipart/form-data">{% csrf_token %}
+            <input type="hidden" name="type"  value="block">
+            <div>{{ form.desc |add_class:"form-control"}}</div>
+            <div>
+                <input class="btn btn-primary" type="submit" value="제출하기" onclick="console.log(123)">
+            </div>
+        </form>
+    </div>
+
+</div>
+<script>
+
+</script>
 {% endblock %}
