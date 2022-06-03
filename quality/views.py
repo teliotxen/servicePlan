@@ -150,7 +150,7 @@ def scenario_detail_block(request, **kwargs):
     return render(request, 'quality/scenario_detail.html', context)
 
 
-def scenario_input(request):
+def scenario_update(request, pk):
     form = ScenarioForm()
     context = {
         'form': form,
