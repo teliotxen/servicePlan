@@ -2,63 +2,97 @@
 {% load widget_tweaks %}
 
 {% block nav-bar %}
-<div>
-    <a href="{% url 'project_list' %}">리스트로 이동</a>
+
+<div class="container">
+    <nav class="navbar bg-light">
+        <div class="container-fluid">
+            <a class=" btn btn-sm btn-secondary" href="{% url 'project_list' %}" >뒤로가기</a>
+            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                시나리오 만들기
+            </button>
+        </div>
+
+
+    </nav>
 </div>
+
 {% endblock %}
 
 ===========================================================
-{% block detail %}
-<div>
-1234
-{{ position }}
-    {% if position == 'project' %}
-        <h1>프로젝트 디테일 화면</h1>
-    {% elif position == 'scenario' %}
-        <h1>시나리오 리스트 화면</h1>
-    {% endif %}
-</div>
-<div>
-    <ul>
-        <li>{{ data.title }}</li>
-        <li>{{ data.desc }}</li>
-        <li>{{ data.pk }}</li>
-    </ul>
+
+{% block contents %}
+<div class="row">
+    <div class="col-sm-6 overflow-auto">
+        <div>
+            <h1>프로젝트 디테일 화면</h1>
+        </div>
+        <div class="container">
+            <h2>{{ data.title }}</h2>
+            <p>{{ data.desc }}</p>
+
+
+        </div>
+    </div>
+    <div class="col-sm-6 overflow-auto">
+        <div>
+            <ol class="list-group list-group-numbered">
+                {% for li in list %}
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold"><a href="{% url 'scenario_detail' li.pk %}">{{ li.title }}</a></div>
+                               {{ li.desc }}
+                        </div>
+                        <span class="badge bg-primary rounded-pill">{{ li.block_relation.count }}</span>
+                    </li>
+{#                    <li><a href="{% url 'scenario_detail' li.pk %}">{{ li.title }}</a></li>#}
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
-{% block list %}
-<div>
-    <ul>
-        {% for li in list %}
-            <li><a href="{% url 'scenario_detail' li.pk %}">{{ li.title }}</a> </li>
-        {% endfor %}
-    </ul>
-</div>
-{% endblock %}
 
 {% block input %}
-<div>
-    <a class="btn btn-sm" data-bs-toggle="collapse" href="#write_comments" role="button" aria-expanded="false" aria-controls="collapseExample">
-        시나리오 만들기
-    </a>
+<div class="container">
+
+
+<!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+                <div class="modal-body">
+
+                        <p>{{ form.title |add_class:"form-control" | attr:"placeholder:제목"}}</p>
+                        <p>{{ form.desc|add_class:"form-control" | attr:"placeholder:내용" }}</p>
+                        <div class="container">
+                            <div id="image_container"></div>
+                        </div>
+                        <p>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                        <p>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                        <p>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control " }}</p>
+                        <p>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                        <p>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+
+
+                        <br>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="submit" class="btn btn-primary">작성하기</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="collapse" id="write_comments">
-    <form method="POST" enctype="multipart/form-data">{% csrf_token %}
 
-        <div>{{ form.title |add_class:"form-control"}}</div>
-        <div>{{ form.desc|add_class:"form-control" }}</div>
-
-        <div>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-        <div>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-        <div>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control " }}</div>
-        <div>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-        <div>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-
-        <div id="image_container"></div>
-        <input type="submit" value="제출하기">
-    </form>
-</div>
 {% endblock %}
 
 

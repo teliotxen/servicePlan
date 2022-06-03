@@ -11,8 +11,22 @@ def main(request):
 
 # ============= 프로젝트 뷰 ===============
 def project_list(request):
-    data = Projects.objects.all().order_by('-created_at')
-    return render(request, 'quality/project_list.html', context={'list': data, 'position': 'project'})
+    data_list = Projects.objects.all().order_by('-created_at')
+    form = ProjectForm()
+    data = Projects()
+
+    context = {
+        'form': form,
+        'position': 'project',
+        'list': data_list,
+    }
+
+    if request.method == "POST":
+        saved_data = save_info(request, data)
+        saved_data.save()
+        return redirect('project_list')
+
+    return render(request, 'quality/project_list.html', context)
 
 
 def project_detail(request, pk):

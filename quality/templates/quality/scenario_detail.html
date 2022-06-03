@@ -6,84 +6,92 @@
 {% endblock %}
 
 {% block nav %}
-    <a href="{% url 'project_detail' project_id%}">뒤로가기</a>
+
+{% endblock %}
+{% block nav-bar %}
+<div class="container">
+    <nav class="navbar bg-light">
+        <div class="container-fluid">
+            <a href="{% url 'project_detail' project_id%}" class="btn btn-sm btn-secondary" >뒤로가기</a>
+        </div>
+    </nav>
+</div>
 {% endblock %}
 
 {% block detail %}
 
-<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>
-
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas with body scrolling</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <p>Try scrolling the rest of the page to see this option in action.</p>
-  </div>
-</div>
-
-
-
 <div class="row">
     <div class="col-sm-6 overflow-auto">
-        <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
-            <div class="form-floating">
-                <input type="hidden" name="type"  value="block">
-                <div class="control has-icons-left" style="width: 100%">
-                    {{ form.desc | add_class:"form-control" |attr:"placeholder:hello"}}
-                </div>
-                <div class="control float-right">
-                    <button class="btn btn-sm btn-secondary" type="submit" >
-                        생성하기
-                    </button>
-                </div>
-            </div>
-        </form>
-        <div class="list-group" id="list_order">
-            {% comment %}if an item was activated, add class 'active'{% endcomment %}
-            {% for li in list %}
-                <div>
-                    <a class="list-group-item list-group-item-action {% if li.pk == block_item.pk%} active {% endif %}" href="{% url 'scenario_detail_block' data.pk li.pk%}" onclick="activeSelector()">
-                        <div class="d-flex w-100 justify-content-between">
-    {#                        <small class="text-muted">{{ li.created_at }}</small>#}
+        <br>
+        <div class="container" style=" margin: 5px;">
+            <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
+                <div class="row">
+                    <div class="form-floating col-9">
+                        <input type="hidden" name="type"  value="block">
+                        <div class="control has-icons-left" style="width: 100%">
+                            {{ form.desc | add_class:"form-control" |attr:"placeholder:hello"}}
                         </div>
-                        <p class="mb-1">{{ li.desc }}</p>
-                        <small class="text-muted">{{ li.created_at }}</small>
-                    </a>
+                    </div>
+                    <div class=" col-3">
+                        <button class="btn btn-sm btn-secondary" type="submit" style="height: 100%">생성하기</button>
+                    </div>
                 </div>
-
-            {% endfor %}
-
-
+            </form>
         </div>
+        <br>
+        <br>
+        <div class="container">
+            <div class="list-group" id="list_order">
+                {% for li in list %}
+                    <div class="container">
+                        <a class="list-group-item list-group-item-action {% if li.pk == block_item.pk%} active {% endif %}" href="{% url 'scenario_detail_block' data.pk li.pk%}" onclick="activeSelector()">
+                            <div class="d-flex w-100 justify-content-between"></div>
+                            <p class="mb-1">{{ li.desc }}</p>
+                            <small class="text-muted">{{ li.created_at }}</small>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
     <div class="col-sm-6 overflow-auto">
         {% if block_id %} {% comment %} 블럭 화면인 경우 {% endcomment %}
-            <p>{{ block_item.desc }}</p>
-            <p>{{ block_item.created_at }}</p>
-            <p>{{ block_item.updated_at }}</p>
-            <a href="{% url 'block_update' scenario_id block_id %}">수정하기</a>
-            <a href="{% url 'confirm' scenario_id block_id  %}?type=block">삭제하기</a>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">블럭</h5>
+                    <p class="card-text">{{ block_item.desc|safe}}</p>
+                    <p class="card-text"><small class="text-muted">{{ block_item.created_at }}</small></p>
+                </div>
+                <div class="container">
+                    <a href="{% url 'block_update' scenario_id block_id %}" class="btn btn-sm btn-primary">수정하기</a>
+                    <a href="{% url 'confirm' scenario_id block_id  %}?type=block" class="btn btn-sm btn-secondary">삭제하기</a>
+                </div>
+                <br>
+            </div>
+            <br>
+
             <hr>
             <div>
-                <a class="btn btn-sm" data-bs-toggle="collapse" href="#write_comments" role="button" aria-expanded="false" aria-controls="collapseExample">
-                    comment 쓰기
+                <a class="btn btn-sm btn-primary" data-bs-toggle="collapse" href="#write_comments" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    comment
                 </a>
             </div>
+            <br>
             <div class="collapse" id="write_comments">
                 <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
                     <input type="hidden" name="type"  value="comment">
-                    <div>{{ comment_form.status |add_class:"form-select"}}</div>
-                    <div>{{ comment_form.desc |add_class:"form-control"}}</div>
+                    <p>{{ comment_form.status |add_class:"form-select"}}</p>
+                    <p>{{ comment_form.desc |add_class:"form-control"|attr:"placeholder:내용입력"}}</p>
                     <div id="image_container"></div>
-                    <div>{{ comment_form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-                    <div>{{ comment_form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-                    <div>{{ comment_form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-                    <div>{{ comment_form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
-                    <div>{{ comment_form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</div>
+                    <p>{{ comment_form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                    <p>{{ comment_form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                    <p>{{ comment_form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                    <p>{{ comment_form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                    <p>{{ comment_form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                    <br>
                     <div>
-                        <input class="btn btn-primary" type="submit" value="제출하기" onclick="console.log(123)">
+                        <input class="btn btn-primary" type="submit" value="제출하기">
                     </div>
                 </form>
             </div>
@@ -93,7 +101,7 @@
                     {% for comments in comments_list %}
                         <div class="card mb-3" style="max-width: 800px;">
                             <div class="card-header">
-                                <span>{{ comments.writer }}</span>
+                                <span>{{ comments.writer }}</span> <span> / <small class="text-muted">{{ comments.created_at }}</small></span>
                             </div>
                             <div class="card-body">
                                 <p class="card-text">{{ comments.desc }}</p>
