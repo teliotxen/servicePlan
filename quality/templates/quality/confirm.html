@@ -3,16 +3,31 @@
 {% load widget_tweaks %}
 
 {% block contents %}
-<form method="POST"  enctype="multipart/form-data">{% csrf_token %}
-    {{ type }}
-    {{ pk0 }}
-    {{ pk1 }}
-    {% if type == 'block'%}
-        <a href="{% url 'scenario_detail_block' pk0 pk1 %}">취소</a>
-    {% elif type == 'comments' %}
-        <a href="{% url 'scenario_detail_block' pk0 pk2 %}">취소</a>
-    {% endif %}
 
-    <button type="submit">확인</button>
-</form>
+<div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+    <h1 class="display-5 fw-bold">Centered hero</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+                {{ type }}
+                {{ pk0 }}
+                {{ pk1 }}
+                <button type="submit" class="btn btn-primary btn-lg px-4 gap-3">확인</button>
+                {% if type == 'block'%}
+                    <a href="{% url 'scenario_detail_block' pk0 pk1 %}" class="btn btn-outline-secondary btn-lg px-4">취소</a>
+                {% elif type == 'comments' %}
+                    <a href="{% url 'scenario_detail_block' pk0 pk2 %}" class="btn btn-outline-secondary btn-lg px-4">취소</a>
+                {% elif type == 'scenario' %}
+                    <a href="{% url 'scenario_detail' pk1 %}" class="btn btn-outline-secondary btn-lg px-4">취소</a>
+                {% endif %}
+
+            </form>
+{#            <button type="submit" class="btn btn-primary btn-lg px-4 gap-3">삭제하기</button>#}
+{#            <button type="button" class="btn btn-outline-secondary btn-lg px-4">취소하기</button>#}
+        </div>
+    </div>
+</div>
+
 {% endblock %}

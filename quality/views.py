@@ -151,11 +151,18 @@ def scenario_detail_block(request, **kwargs):
 
 
 def scenario_update(request, pk):
-    form = ScenarioForm()
+    scenario = Scenario.objects.get(pk=pk)
+    form = ScenarioForm(instance=scenario)
     context = {
+        'data': scenario,
         'form': form,
         'position': 'scenario',
     }
+    if request.method == "POST":
+        saved_data = save_info(request,scenario)
+        saved_data.save()
+        return redirect('scenario_detail', pk)
+
     return render(request, 'quality/project_input.html', context)
 
 
@@ -245,6 +252,12 @@ def confirm(request, **kwargs):
             obj = Comments.objects.get(pk=pk1)
             obj.delete()
             return redirect(f'/procedure/scenario/deatil/{pk0}/{obj.block_relation.pk}/')
+
+        elif type_sort == 'scenario':
+            obj = Scenario.objects.get(pk=pk1)
+            obj.delete()
+            return redirect('project_detail', pk0)
+
 
     context = {
         'pk0': pk0,

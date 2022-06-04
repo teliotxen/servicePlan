@@ -14,7 +14,6 @@
         <div class="container-fluid">
             <div>
                 <a href="{% url 'project_detail' project_id%}" class="btn btn-sm btn-secondary" >뒤로가기</a>
-                <a href="/procedure/scenario/deatil/{{ scenario_id }}/" class="btn btn-sm btn-primary" >시나리오</a>
             </div>
 
         </div>
@@ -33,7 +32,7 @@
                     <div class="form-floating col-9">
                         <input type="hidden" name="type"  value="block">
                         <div class="control has-icons-left" style="width: 100%">
-                            {{ form.desc | add_class:"form-control" |attr:"placeholder:hello"}}
+                            {{ form.desc | add_class:"form-control" |attr:"placeholder:시나리오 작성"}}
                         </div>
                     </div>
                     <div class=" col-3">
@@ -61,6 +60,9 @@
     </div>
     <div class="col-sm-6 overflow-auto">
         {% if block_id %} {% comment %} 블럭 화면인 경우 {% endcomment %}
+            <div class="container">
+
+            </div>
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">블럭</h5>
@@ -68,37 +70,13 @@
                     <p class="card-text"><small class="text-muted">{{ block_item.created_at }}</small></p>
                 </div>
                 <div class="container">
+                    <a href="/procedure/scenario/deatil/{{ scenario_id }}/" class="btn btn-sm btn-primary" >시나리오</a>
                     <a href="{% url 'block_update' scenario_id block_id %}" class="btn btn-sm btn-primary">수정하기</a>
                     <a href="{% url 'confirm' scenario_id block_id  %}?type=block" class="btn btn-sm btn-secondary">삭제하기</a>
                 </div>
                 <br>
             </div>
             <br>
-
-            <hr>
-            <div>
-                <a class="btn btn-sm btn-primary" data-bs-toggle="collapse" href="#write_comments" role="button" aria-expanded="false" aria-controls="collapseExample">
-                    comment
-                </a>
-            </div>
-            <br>
-            <div class="collapse" id="write_comments">
-                <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
-                    <input type="hidden" name="type"  value="comment">
-                    <p>{{ comment_form.status |add_class:"form-select"}}</p>
-                    <p>{{ comment_form.desc |add_class:"form-control"|attr:"placeholder:내용입력"}}</p>
-                    <div id="image_container"></div>
-                    <p>{{ comment_form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
-                    <p>{{ comment_form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
-                    <p>{{ comment_form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
-                    <p>{{ comment_form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
-                    <p>{{ comment_form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
-                    <br>
-                    <div>
-                        <input class="btn btn-primary" type="submit" value="제출하기">
-                    </div>
-                </form>
-            </div>
             <hr>
             <div>
                 {% if comments_list %}
@@ -111,19 +89,15 @@
                                 <p class="card-text">{{ comments.desc }}</p>
                             </div>
                                 <div class="card-footer bg-transparent border-success">
+                                    <button type="button" class="btn btn-sm btn-primary position-relative" onclick="reviewCreate({{ comments.pk }})">확인</span>
+                                    </button>
                                     {% if comments.image_1 %}
                                         <a class="btn btn-sm" data-bs-toggle="collapse" href="#col_id_{{ comments.pk }}" role="button" aria-expanded="false" aria-controls="collapseExample">사진보기</a>
                                     {% endif %}
                                     {% if scenario_id %}
                                         <a href="{% url 'confirm' scenario_id comments.pk %}?type=comments" class="btn btn-sm btn-primary position-relative" >삭제</a>
                                     {% endif %}
-                                    <button type="button" class="btn btn-sm btn-primary position-relative" onclick="reviewCreate({{ comments.pk }})">
-                                        댓글
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            10
-                                        <span class="visually-hidden">unread messages</span>
-                                        </span>
-                                    </button>
+
 
                                 </div>
                             <div class="collapse" id="col_id_{{ comments.pk }}">
@@ -151,21 +125,31 @@
 
             </div>
             <hr>
-
+            <div>
+                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">코멘트</button>
+            </div>
         {% else %} {% comment %} 시나리오 화면인 경우 {% endcomment %}
             <div class="container">
-                <nav class="navbar bg-light">
-                    <div class="container-fluid">
-                        <div>
-                            <a href="#" class="btn btn-sm btn-primary" >수정하기</a>
-                            <a href="#" class="btn btn-sm btn-secondary" >삭제하기</a>
-                        </div>
-
-                    </div>
-                </nav>
                 <div>
-                    <h3>{{ data.title }}</h3>   <p>{{ data.desc }}</p>
+                    <div>
+                        <h3>{{ data.title }}</h3>
+                    </div>
+                    <div>
+                        <nav class="navbar bg-light">
+                            <div class="container-fluid">
+                                <div>
+                                    <a href="{% url 'scenario_update' data.pk %}" class="btn btn-sm btn-primary" >수정하기</a>
+                                    <a href="{% url 'confirm' data.relation.pk data.pk%}?type=scenario" class="btn btn-sm btn-secondary" >삭제하기</a>
+                                </div>
+
+                            </div>
+                        </nav>
+                    </div>
+                    <div>
+                        <p>{{ data.desc }}</p>
+                    </div>
                 </div>
+
                 {% if data.image_1 %}
                 <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
@@ -241,8 +225,64 @@
 {% endblock %}
 
 {% block input %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">123</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+            <div class="modal-body">
+
+                    <p>{{ form.title |add_class:"form-control" | attr:"placeholder:제목"}}</p>
+                    <p>{{ form.desc|add_class:"form-control" | attr:"placeholder:내용" }}</p>
+                    <div class="container">
+                        <div id="image_container"></div>
+                    </div>
+                    <p>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                    <p>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                    <p>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control " }}</p>
+                    <p>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                    <p>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
 
 
+                    <br>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="submit" class="btn btn-primary">작성하기</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% comment %}offsider bar{% endcomment %}
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasScrollingLabel">코멘트 쓰기</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
+            <input type="hidden" name="type"  value="comment">
+            <p>{{ comment_form.status |add_class:"form-select"}}</p>
+            <p>{{ comment_form.desc |add_class:"form-control"|attr:"placeholder:내용입력"}}</p>
+            <div id="image_container"></div>
+            <p>{{ comment_form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+            <p>{{ comment_form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+            <p>{{ comment_form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+            <p>{{ comment_form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+            <p>{{ comment_form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+            <br>
+            <div>
+                <input class="btn btn-primary" type="submit" value="제출하기">
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
 
 {% block script %}
