@@ -1,5 +1,6 @@
 from django.db import models
 from user_profile.models import User
+import datetime
 
 
 class Block(models.Model):
@@ -23,6 +24,8 @@ class Scenario(models.Model):
     block_order = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    start_date = models.DateField(default=datetime.date.today, null=True)
+    due_date = models.DateField(null=True)
 
 
 class Comments(models.Model):

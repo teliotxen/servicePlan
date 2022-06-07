@@ -1,6 +1,10 @@
 {% extends 'base/base.html' %}
 {% load widget_tweaks %}
 
+
+{% block head %}
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+{% endblock %}
 {% block nav-bar %}
 <div class="container">
     <nav class="navbar bg-light">
@@ -20,7 +24,10 @@
             <p>{{ form.status  }}</p>
         {% else %}
             <p>{{ form.title |add_class:"form-control"}}</p>
+            <p>{{ form.start_date|add_class:"form-control" }}</p>
+            <p>{{ form.due_date|add_class:"form-control" }}</p>
         {% endif %}
+
 
         <p>{{ form.desc |add_class:"form-control"}}</p>
 
@@ -39,7 +46,29 @@
 {% endblock %}
 
 {% block script %}
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 <script>
+    $.datepicker.setDefaults({
+          dateFormat: 'yy-mm-dd',
+          prevText: '이전 달',
+          nextText: '다음 달',
+          monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+          monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+          dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+          dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+          dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+          showMonthAfterYear: true,
+          yearSuffix: '년'
+        });
+    $( function() {
+        $("#id_start_date").datepicker();
+      } );
+
+    $( function() {
+        $("#id_due_date").datepicker();
+      } );
 
 
 </script>

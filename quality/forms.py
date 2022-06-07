@@ -12,7 +12,7 @@ class ProjectForm(forms.ModelForm):
 class ScenarioForm(forms.ModelForm):
     class Meta:
         model = Scenario
-        fields = ['title', 'desc', 'image_1', 'image_2', 'image_3', 'image_4', 'image_5']
+        fields = ['title', 'desc', 'image_1', 'image_2', 'image_3', 'image_4', 'image_5', 'start_date', 'due_date']
 
 
 class BlockForm(forms.ModelForm):

@@ -1,6 +1,10 @@
 {% extends 'base/base.html' %}
 {% load widget_tweaks %}
 
+
+{% block head %}
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+{% endblock %}
 {% block nav-bar %}
 
 <div class="container">
@@ -29,7 +33,11 @@
         <div class="container">
             <h2>{{ data.title }}</h2>
             <p>{{ data.desc }}</p>
-
+            {% if graph %}
+                <div style="width:600;height:500;">
+                {{ graph|safe }}
+                </div>
+            {% endif %}
 
         </div>
     </div>
@@ -69,6 +77,8 @@
                 <div class="modal-body">
 
                         <p>{{ form.title |add_class:"form-control" | attr:"placeholder:제목"}}</p>
+                        <p>{{ form.start_date|add_class:"form-control" }}</p>
+                        <p>{{ form.due_date|add_class:"form-control" }}</p>
                         <p>{{ form.desc|add_class:"form-control" | attr:"placeholder:내용" }}</p>
                         <div class="container">
                             <div id="image_container"></div>
@@ -97,6 +107,8 @@
 
 
 {% block script %}
+      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 <script>
     initPictureUpload()
     function initPictureUpload(){
@@ -105,6 +117,13 @@
             attached[i].style.display = 'none'
         }
     }
+    $( function() {
+        $( "#id_start_date" ).datepicker({dateFormat: 'yy-mm-dd'});
+      } );
+
+    $( function() {
+        $( "#id_due_date" ).datepicker({dateFormat: 'yy-mm-dd'});
+      } );
 </script>
 
 {% endblock %}

@@ -1,9 +1,13 @@
 import json
-
+import plotly.express as px
+import pandas as pd
 from django.shortcuts import render, redirect
 from .forms import ProjectForm, ScenarioForm, BlockForm, CommentsForm, ReviewForm
 from .models import Projects, Scenario, Block, Comments, Review
 from .utils import save_info
+import plotly.offline as opy
+from django.views.decorators.clickjacking import xframe_options_deny
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 
 def main(request):
     return render(request, 'quality/main.html' )
@@ -28,7 +32,7 @@ def project_list(request):
 
     return render(request, 'quality/project_list.html', context)
 
-
+@xframe_options_sameorigin
 def project_detail(request, pk):
     data = Projects.objects.get(pk=pk)
     scenario = Scenario.objects.filter(relation=data)
@@ -44,9 +48,30 @@ def project_detail(request, pk):
     }
     target_data = Scenario()
     if request.method == "POST":
+        target_data.start_date = request.POST['start_date']
+        target_data.due_date = request.POST['due_date']
         saved_data = save_info(request, target_data)
         saved_data.relation = data
         saved_data.save()
+
+    print(scenario)
+
+    dataframe = list()
+    for item in scenario:
+        dataframe.append(dict(Task=item.title, Start=item.start_date, Finish=item.due_date))
+
+    # df = pd.DataFrame([
+    #     dict(Task="Job A", Start='2009-01-01', Finish='2009-01-17'),
+    #     dict(Task="Job B", Start='2009-01-02', Finish='2009-01-05'),
+    #     dict(Task="Job C", Start='2009-01-02', Finish='2009-01-03')
+    # ])
+    df = pd.DataFrame(dataframe)
+
+    fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task")
+    fig.update_yaxes(autorange="reversed")  # otherwise tasks are listed from the bottom up
+
+    context['graph'] = fig.to_html()
+
     return render(request, 'quality/project_detail.html', context)
 
 
@@ -159,6 +184,8 @@ def scenario_update(request, pk):
         'position': 'scenario',
     }
     if request.method == "POST":
+        scenario.start_date = request.POST['start_date']
+        scenario.due_date = request.POST['due_date']
         saved_data = save_info(request,scenario)
         saved_data.save()
         return redirect('scenario_detail', pk)
