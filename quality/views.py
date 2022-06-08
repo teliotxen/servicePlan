@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from .forms import ProjectForm, ScenarioForm, BlockForm, CommentsForm, ReviewForm
 from .models import Projects, Scenario, Block, Comments, Review
 from .utils import save_info
+from user_profile.models import User
 import plotly.offline as opy
 from django.views.decorators.clickjacking import xframe_options_deny
 from django.views.decorators.clickjacking import xframe_options_sameorigin
@@ -183,12 +184,14 @@ def scenario_detail_block(request, **kwargs):
 
     if request.method == 'POST':
         if request.POST['type'] == 'block':
+
             saved_data = save_info(request, block)
             saved_data.save()
             data.block_relation.add(saved_data)
             data.save()
         else:
             comment = Comments()
+            comment.writer = User.objects.get(username=request.user.username)
             comment.block_relation = Block.objects.get(pk=block_id)
             comment.scenario_relation = Scenario.objects.get(pk=scenario_id)
             saved_data = save_info(request, comment)
