@@ -18,3 +18,5 @@ package-lock.json
 /landing/.DS_Store
 /quality/.DS_Store
 requirements.txt
+/quality/__pycache__/
+/static/
