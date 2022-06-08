@@ -1,9 +1,9 @@
 {% extends 'base/base.html' %}
 {% load widget_tweaks %}
-
+{% load static %}
 
 {% block head %}
-      <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+      <link rel="stylesheet" href="{% static 'quality/css/jquery-ui.css' %}">
 {% endblock %}
 {% block nav-bar %}
 
@@ -11,9 +11,9 @@
     <nav class="navbar bg-light">
         <div class="container-fluid">
             <a class=" btn btn-sm btn-secondary" href="{% url 'project_list' %}" >뒤로가기</a>
-            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                시나리오 만들기
-            </button>
+
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">시나리오 확인</button>
+
         </div>
 
 
@@ -26,7 +26,7 @@
 
 {% block contents %}
 <div class="row">
-    <div class="col-sm-6 overflow-auto">
+    <div class="col-sm-10 overflow-auto offset-sm-1">
         <div>
             <h1>프로젝트 디테일 화면</h1>
         </div>
@@ -34,26 +34,36 @@
             <h2>{{ data.title }}</h2>
             <p>{{ data.desc }}</p>
             {% if graph %}
-                <div style="width:600;height:500;">
-                {{ graph|safe }}
+                <div style="width:100%;">
+                    {{ graph|safe }}
                 </div>
             {% endif %}
 
         </div>
     </div>
-    <div class="col-sm-6 overflow-auto">
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-left: 20px; margin-right: 20px">
+        시나리오 만들기
+    </button>
+    <br>
+    <div class="offcanvas-body">
         <div>
             <ol class="list-group list-group-numbered">
-                {% for li in list %}
-                    <li class="list-group-item d-flex justify-content-between align-items-start">
-                        <div class="ms-2 me-auto">
-                            <div class="fw-bold"><a href="{% url 'scenario_detail' li.pk %}">{{ li.title }}</a></div>
-                               {{ li.desc }}
-                        </div>
-                        <span class="badge bg-primary rounded-pill">{{ li.block_relation.count }}</span>
-                    </li>
-{#                    <li><a href="{% url 'scenario_detail' li.pk %}">{{ li.title }}</a></li>#}
-                {% endfor %}
+            {% for li in list %}
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold"><a href="{% url 'scenario_detail' li.pk %}">{{ li.title }}</a></div>
+                       {{ li.desc }}
+                </div>
+                <span class="badge bg-primary rounded-pill">{{ li.block_relation.count }}</span>
+            </li>
+            {% endfor %}
             </ol>
         </div>
     </div>
@@ -107,8 +117,8 @@
 
 
 {% block script %}
-      <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+      <script src="{% static 'quality/js/jquery-3.6.0.js' %}"></script>
+  <script src="{% static 'quality/js/jquery-ui.js' %}"></script>
 <script>
     initPictureUpload()
     function initPictureUpload(){

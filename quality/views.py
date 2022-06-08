@@ -1,6 +1,7 @@
 import json
 import plotly.express as px
 import pandas as pd
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import ProjectForm, ScenarioForm, BlockForm, CommentsForm, ReviewForm
 from .models import Projects, Scenario, Block, Comments, Review
@@ -14,6 +15,7 @@ def main(request):
 
 
 # ============= 프로젝트 뷰 ===============
+@login_required
 def project_list(request):
     data_list = Projects.objects.all().order_by('-created_at')
     form = ProjectForm()
@@ -32,6 +34,8 @@ def project_list(request):
 
     return render(request, 'quality/project_list.html', context)
 
+
+@login_required
 @xframe_options_sameorigin
 def project_detail(request, pk):
     data = Projects.objects.get(pk=pk)
@@ -60,14 +64,9 @@ def project_detail(request, pk):
     for item in scenario:
         dataframe.append(dict(Task=item.title, Start=item.start_date, Finish=item.due_date))
 
-    # df = pd.DataFrame([
-    #     dict(Task="Job A", Start='2009-01-01', Finish='2009-01-17'),
-    #     dict(Task="Job B", Start='2009-01-02', Finish='2009-01-05'),
-    #     dict(Task="Job C", Start='2009-01-02', Finish='2009-01-03')
-    # ])
     df = pd.DataFrame(dataframe)
 
-    fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task")
+    fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task", color="Task")
     fig.update_yaxes(autorange="reversed")  # otherwise tasks are listed from the bottom up
 
     context['graph'] = fig.to_html()
@@ -75,6 +74,7 @@ def project_detail(request, pk):
     return render(request, 'quality/project_detail.html', context)
 
 
+@login_required
 def project_input(request):
     form = ProjectForm()
     data = Projects()
@@ -93,6 +93,7 @@ def project_input(request):
 
 
 # ============= 시나리오 뷰 ===============
+@login_required
 def scenario_detail(request, pk):
     project_id = Projects.objects.get(pk=request.session['scenario_data'])
     raw_data = Scenario.objects.filter(relation=project_id)
@@ -130,6 +131,7 @@ def scenario_detail(request, pk):
     return render(request, 'quality/scenario_detail.html', context)
 
 
+@login_required
 def scenario_detail_block(request, **kwargs):
     scenario_id = kwargs['pk0']
     block_id = kwargs['pk1']
@@ -175,6 +177,7 @@ def scenario_detail_block(request, **kwargs):
     return render(request, 'quality/scenario_detail.html', context)
 
 
+@login_required
 def scenario_update(request, pk):
     scenario = Scenario.objects.get(pk=pk)
     form = ScenarioForm(instance=scenario)
@@ -194,11 +197,13 @@ def scenario_update(request, pk):
 
 
 # ============= 블럭 뷰 ===============
+@login_required
 def block_list(request):
     data = Scenario.objects.all().order_by('-created_at')
     return render(request, 'quality/project_list.html', context={'list': data, 'position': 'block'})
 
 
+@login_required
 def block_input(request):
     form = BlockForm()
     context = {
@@ -208,6 +213,7 @@ def block_input(request):
     return render(request, 'quality/project_input.html', context)
 
 
+@login_required
 def block_update(request, **kwargs):
     scenario_id = kwargs['pk0']
     block_id = kwargs['pk1']
@@ -228,11 +234,15 @@ def block_update(request, **kwargs):
     return render(request, 'quality/blocks.html', context)
 
 # ============= 리뷰 뷰 ===============
+
+
+@login_required
 def comment_list(request):
     data = Scenario.objects.all().order_by('-created_at')
     return render(request, 'quality/project_list.html', context={'list': data, 'position': 'comment'})
 
 
+@login_required
 def comment_input(request, **kwargs):
     scenario_id = kwargs['pk0']
     block_id = kwargs['pk1']
@@ -264,6 +274,7 @@ def comment_input(request, **kwargs):
     return render(request, 'quality/review_input.html', context)
 
 
+@login_required
 def confirm(request, **kwargs):
     pk0 = kwargs['pk0'] #scenario
     pk1 = kwargs['pk1'] #comment
@@ -284,7 +295,6 @@ def confirm(request, **kwargs):
             obj = Scenario.objects.get(pk=pk1)
             obj.delete()
             return redirect('project_detail', pk0)
-
 
     context = {
         'pk0': pk0,
