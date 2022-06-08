@@ -22,3 +22,4 @@ requirements.txt
 /static/
 .gitignore
 quality/__pycache__/views.cpython-38.pyc
+servicePlan/settings.py
