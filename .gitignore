@@ -21,3 +21,4 @@ requirements.txt
 /quality/__pycache__
 /static/
 .gitignore
+quality/__pycache__/views.cpython-38.pyc
