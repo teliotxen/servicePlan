@@ -11,9 +11,8 @@
     <nav class="navbar bg-light">
         <div class="container-fluid">
             <a class=" btn btn-sm btn-secondary" href="{% url 'project_list' %}" >뒤로가기</a>
-
+            <br>
             <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">시나리오 확인</button>
-
         </div>
 
 
@@ -98,10 +97,7 @@
                         <p>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control " }}</p>
                         <p>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
                         <p>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
-
-
                         <br>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
