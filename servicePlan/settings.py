@@ -115,12 +115,24 @@ WSGI_APPLICATION = 'servicePlan.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'serviceplan',
+        'USER': 'danbi',
+        'PASSWORD': 'eksql12#',
+        'HOST': 'teliotxen-2670.postgres.pythonanywhere-services.com',
+        'PORT': '12670',
     }
 }
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
