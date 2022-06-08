@@ -61,15 +61,18 @@ def project_detail(request, pk):
     print(scenario)
 
     dataframe = list()
-    for item in scenario:
-        dataframe.append(dict(Task=item.title, Start=item.start_date, Finish=item.due_date))
+    try:
+        for item in scenario:
+            dataframe.append(dict(Task=item.title, Start=item.start_date, Finish=item.due_date))
 
-    df = pd.DataFrame(dataframe)
+        df = pd.DataFrame(dataframe)
 
-    fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task", color="Task")
-    fig.update_yaxes(autorange="reversed")  # otherwise tasks are listed from the bottom up
+        fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task", color="Task")
+        fig.update_yaxes(autorange="reversed")  # otherwise tasks are listed from the bottom up
 
-    context['graph'] = fig.to_html()
+        context['graph'] = fig.to_html()
+    except:
+        context['graph'] =''
 
     return render(request, 'quality/project_detail.html', context)
 
