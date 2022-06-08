@@ -10,12 +10,26 @@ import plotly.offline as opy
 from django.views.decorators.clickjacking import xframe_options_deny
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 
+def time_out(func):
+    def wrap(request, *args, **kwargs): #wrapping 함수
+        try:
+            email_value = request.user.email
+        except:
+            email_value = True
+
+        if not 'danbicorp.com' in email_value:
+            return render(request, 'quality/main.html')
+        return func(request, *args, **kwargs)
+    return wrap
+
+
 def main(request):
     return render(request, 'quality/main.html' )
 
 
 # ============= 프로젝트 뷰 ===============
 @login_required
+@time_out
 def project_list(request):
     data_list = Projects.objects.all().order_by('-created_at')
     form = ProjectForm()
@@ -37,6 +51,7 @@ def project_list(request):
 
 @login_required
 @xframe_options_sameorigin
+@time_out
 def project_detail(request, pk):
     data = Projects.objects.get(pk=pk)
     scenario = Scenario.objects.filter(relation=data)
@@ -78,6 +93,7 @@ def project_detail(request, pk):
 
 
 @login_required
+@time_out
 def project_input(request):
     form = ProjectForm()
     data = Projects()
@@ -97,6 +113,7 @@ def project_input(request):
 
 # ============= 시나리오 뷰 ===============
 @login_required
+@time_out
 def scenario_detail(request, pk):
     project_id = Projects.objects.get(pk=request.session['scenario_data'])
     raw_data = Scenario.objects.filter(relation=project_id)
@@ -135,6 +152,7 @@ def scenario_detail(request, pk):
 
 
 @login_required
+@time_out
 def scenario_detail_block(request, **kwargs):
     scenario_id = kwargs['pk0']
     block_id = kwargs['pk1']
@@ -181,6 +199,7 @@ def scenario_detail_block(request, **kwargs):
 
 
 @login_required
+@time_out
 def scenario_update(request, pk):
     scenario = Scenario.objects.get(pk=pk)
     form = ScenarioForm(instance=scenario)
@@ -201,12 +220,14 @@ def scenario_update(request, pk):
 
 # ============= 블럭 뷰 ===============
 @login_required
+@time_out
 def block_list(request):
     data = Scenario.objects.all().order_by('-created_at')
     return render(request, 'quality/project_list.html', context={'list': data, 'position': 'block'})
 
 
 @login_required
+@time_out
 def block_input(request):
     form = BlockForm()
     context = {
@@ -217,6 +238,7 @@ def block_input(request):
 
 
 @login_required
+@time_out
 def block_update(request, **kwargs):
     scenario_id = kwargs['pk0']
     block_id = kwargs['pk1']
@@ -240,12 +262,14 @@ def block_update(request, **kwargs):
 
 
 @login_required
+@time_out
 def comment_list(request):
     data = Scenario.objects.all().order_by('-created_at')
     return render(request, 'quality/project_list.html', context={'list': data, 'position': 'comment'})
 
 
 @login_required
+@time_out
 def comment_input(request, **kwargs):
     scenario_id = kwargs['pk0']
     block_id = kwargs['pk1']
@@ -278,6 +302,7 @@ def comment_input(request, **kwargs):
 
 
 @login_required
+@time_out
 def confirm(request, **kwargs):
     pk0 = kwargs['pk0'] #scenario
     pk1 = kwargs['pk1'] #comment
