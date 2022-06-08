@@ -17,4 +17,4 @@ package-lock.json
 .DS_Store
 /landing/.DS_Store
 /quality/.DS_Store
-
+requirements.txt
