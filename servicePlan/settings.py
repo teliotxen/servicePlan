@@ -66,6 +66,10 @@ ACCOUNT_SIGNUP_REDIRECT_URL = "/"
 AUTH_USER_MODEL = 'user_profile.User'
 ACCOUNT_LOGOUT_ON_GET = True
 
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SESSION_REMEMBER = True
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`

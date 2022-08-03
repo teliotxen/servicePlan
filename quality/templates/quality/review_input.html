@@ -31,8 +31,7 @@
     </div>
     <div class="container">
         <div class="accordion accordion-flush" id="accordionFlushExample">
-          {% for review in review_list %}
-
+            {% for review in review_list %}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="flush-heading{{ review.pk }}">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ review.pk }}" aria-expanded="false" aria-controls="flush-collapse{{ review.pk }}">
@@ -42,10 +41,25 @@
                 <div id="flush-collapse{{ review.pk }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ review.pk }}" data-bs-parent="#accordionFlush{{ review.pk }}">
                     <div class="accordion-body">
                         <span class="small">{{ review.writer }}</span> / <span class="small"> {{ review.created_at }}</span>
+                        {% if review.image_1 %}
+                            <img src="{{ review.image_1.url }}" alt="" class="img-fluid">
+                        {% endif %}
+                        {% if review.image_2 %}
+                            <img src="{{ review.image_2.url }}" alt="" class="img-fluid">
+                        {% endif %}
+                        {% if review.image_3 %}
+                            <img src="{{ review.image_3.url }}" alt="" class="img-fluid">
+                        {% endif %}
+                        {% if review.image_4 %}
+                            <img src="{{ review.image_4.url }}" alt="" class="img-fluid">
+                        {% endif %}
+                        {% if review.image_5 %}
+                            <img src="{{ review.image_5.url }}" alt="" class="img-fluid">
+                        {% endif %}
                     </div>
                 </div>
             </div>
-          {% endfor %}
+            {% endfor %}
         </div>
     </div>
     <hr>

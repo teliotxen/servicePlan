@@ -97,7 +97,9 @@ def scenario_detail(request, pk):
             data.save()
         else:
             comment = Comments()
+
             comment.scenario_relation = Scenario.objects.get(pk=pk)
+            comment.writer = request.user
             saved_data = save_info(request, comment)
             saved_data.save()
         return redirect('scenario_detail', pk)
@@ -141,6 +143,7 @@ def scenario_detail_block(request, **kwargs):
             data.save()
         else:
             comment = Comments()
+            comment.writer = request.user
             comment.block_relation = Block.objects.get(pk=block_id)
             comment.scenario_relation = Scenario.objects.get(pk=scenario_id)
             saved_data = save_info(request, comment)
@@ -262,7 +265,7 @@ def confirm(request, **kwargs):
     context = {
         'pk0': pk0,
         'pk1': pk1,
-        'type': type_sort
+        'type': type_sort,
     }
 
     if type_sort == 'comments':
@@ -272,7 +275,7 @@ def confirm(request, **kwargs):
             'pk0': pk0,
             'pk1': pk1,
             'pk2': pk2,
-            'type': type_sort
+            'type': type_sort,
         }
 
     return render(request, 'quality/confirm.html', context)
