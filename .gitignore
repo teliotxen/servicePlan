@@ -1,0 +1,17 @@
+/servicePlan/utils.py
+/servicePlan/settings.py
+
+/db.sqlite3
+
+venv/
+.idea/
+/servicePlan/__pycache__/
+/landing/__pycache__/
+/quality/__pycache__/
+/user_profile/__pycache__/
+
+/media/
+.DS_Store
+/landing/.DS_Store
+/quality/.DS_Store
+

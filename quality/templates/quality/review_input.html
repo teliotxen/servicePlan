@@ -1,0 +1,100 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block nav-bar %}
+<div class="container">
+    <nav class="navbar bg-light">
+        <div class="container-fluid">
+            <div>
+                <a href="{% url 'scenario_detail_block' scenario_id block_id%}" class="btn btn-sm btn-secondary" >뒤로가기</a>
+            </div>
+
+        </div>
+    </nav>
+</div>
+{% endblock %}
+{% block contents %}
+<div class="col-sm-8 offset-sm-2">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                Quote
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>{{ data.desc }}</p>
+                    <footer class="blockquote-footer">{{ data.writer }} - <cite title="Source Title" class="small">{{ data.created_at }}</cite></footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+            {% for review in review_list %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-heading{{ review.pk }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ review.pk }}" aria-expanded="false" aria-controls="flush-collapse{{ review.pk }}">
+                        {{ review.desc }}
+                    </button>
+                </h2>
+                <div id="flush-collapse{{ review.pk }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ review.pk }}" data-bs-parent="#accordionFlush{{ review.pk }}">
+                    <div class="accordion-body">
+                        <span class="small">{{ review.writer }}</span> / <span class="small"> {{ review.created_at }}</span>
+                        {% if review.image_1 %}
+                            <img src="{{ review.image_1.url }}" alt="" class="img-fluid">
+                        {% endif %}
+                        {% if review.image_2 %}
+                            <img src="{{ review.image_2.url }}" alt="" class="img-fluid">
+                        {% endif %}
+                        {% if review.image_3 %}
+                            <img src="{{ review.image_3.url }}" alt="" class="img-fluid">
+                        {% endif %}
+                        {% if review.image_4 %}
+                            <img src="{{ review.image_4.url }}" alt="" class="img-fluid">
+                        {% endif %}
+                        {% if review.image_5 %}
+                            <img src="{{ review.image_5.url }}" alt="" class="img-fluid">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <form method="POST" name="block" enctype="multipart/form-data">{% csrf_token %}
+            <input type="hidden" name="type"  value="comment">
+            <p>{{ form.status |add_class:"form-select"}}</p>
+            <p>{{ form.desc |add_class:"form-control"}}</p>
+            <div id="image_container"></div>
+            <p>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+            <p>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+            <p>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+            <p>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+            <p>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+            <div>
+                <input class="btn btn-primary" type="submit" value="제출하기" onclick="console.log(123)">
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+{% block script %}
+<script>
+    initPictureUpload()
+    function initPictureUpload(){
+        let attached = document.querySelectorAll('.attached')
+        for (i=1; i<5; i++){
+            attached[i].style.display = 'none'
+        }
+    }
+</script>
+
+{% endblock %}

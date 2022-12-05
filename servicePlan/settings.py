@@ -52,6 +52,8 @@ INSTALLED_APPS = [
 
     #app
     'user_profile',
+    'landing',
+    'quality',
 
 ]
 # ALLAUTH SETTINGS
@@ -64,6 +66,10 @@ ACCOUNT_SIGNUP_REDIRECT_URL = "/"
 AUTH_USER_MODEL = 'user_profile.User'
 ACCOUNT_LOGOUT_ON_GET = True
 
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SESSION_REMEMBER = True
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -159,6 +165,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'node_modules'),
+    # os.path.join(BASE_DIR, 'static'),
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

@@ -1,0 +1,97 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block head %}
+
+{% endblock %}
+{% block nav-bar %}
+    <div class="container">
+        <nav class="navbar bg-light">
+            <div class="container-fluid">
+                <div>
+                    <a href="{% url 'main' %}" class="btn btn-secondary" >이전화면</a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                     프로젝트 생성
+                    </button>
+                </div>
+
+            </div>
+
+        </nav>
+    </div>
+
+{% endblock %}
+
+{% block contents %}
+<div class="container">
+
+
+<!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">프로젝트 만들기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+                <div class="modal-body">
+                    <p>{{ form.title |add_class:"form-control" | attr:"placeholder:제목"}}</p>
+                    <p>{{ form.desc|add_class:"form-control" | attr:"placeholder:내용" }}</p>
+                    <div class="container">
+                        <div id="image_container"></div>
+                    </div>
+                    <p>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                    <p>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                    <p>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control " }}</p>
+                    <p>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+                    <p>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="submit" class="btn btn-primary">작성하기</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block list %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for item in list %}
+        <div class="col">
+            <div class="card">
+                {% if item.image_1 %}
+                    <img src="{{ item.image_1.url }}" class="card-img-top" alt="...">
+                {% else %}
+                    <img src="{% static 'quality/img/dmg.jpg' %}" class="card-img-top" alt="...">
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <p class="card-text">{{ item.desc }}</p>
+                    <a href="{% url 'project_detail' item.pk %}" class="btn btn-primary">확인</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    initPictureUpload()
+    function initPictureUpload(){
+        let attached = document.querySelectorAll('.attached')
+        for (i=1; i<5; i++){
+            attached[i].style.display = 'none'
+        }
+    }
+</script>
+{% endblock %}

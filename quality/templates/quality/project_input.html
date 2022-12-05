@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+{% load widget_tweaks %}
+
+{% block nav-bar %}
+<div class="container">
+    <nav class="navbar bg-light">
+        <div class="container-fluid">
+            <div>
+                <a href="{% url 'scenario_detail' data.pk %}" class="btn btn-sm btn-secondary" >뒤로가기</a>
+            </div>
+
+        </div>
+    </nav>
+</div>
+{% endblock %}
+{% block input %}
+<div class="container col-sm-8 offset-sm-2">
+    <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+        {% if position == "comment" %}
+            <p>{{ form.status  }}</p>
+        {% else %}
+            <p>{{ form.title |add_class:"form-control"}}</p>
+        {% endif %}
+
+        <p>{{ form.desc |add_class:"form-control"}}</p>
+
+        <p>{{ form.image_1|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+        <p>{{ form.image_2|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+        <p>{{ form.image_3|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+        <p>{{ form.image_4|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+        <p>{{ form.image_5|attr:"onchange:setThumbnail(event)" | add_class:"attached form-control" }}</p>
+
+        <div id="image_container"></div>
+
+        <input type="submit" value="제출하기">
+    </form>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+
+</script>
+{% endblock %}
+
+
+

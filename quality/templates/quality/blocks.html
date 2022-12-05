@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block nav-bar %}
+{% endblock %}
+{% block contents %}
+<div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+    <h1 class="display-5 fw-bold">수정하기</h1>
+    <div class="col-lg-6 mx-auto">
+        <form method="POST" name="form" enctype="multipart/form-data">{% csrf_token %}
+            <input type="hidden" name="type"  value="block">
+            <div>{{ form.desc |add_class:"form-control"}}</div>
+            <br>
+            <div class="container">
+                <input class="btn btn-primary" type="submit" value="제출하기">
+                <a href="{% url 'scenario_detail_block' scenario_id block_id%}" class="btn btn-sm btn-dang">돌아가기</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+
+</script>
+{% endblock %}
