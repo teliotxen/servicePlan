@@ -57,7 +57,8 @@ service Plan은 QA 또는 기획과정에 필요한 flow를 효율적으로 정�
 
 ## sortableJs와 Django를 활용한 리스트 순서 저장 
 ajax POST에서 받은 값을 시나리오 block_order에 저장하는 로직입니다. 
-
+  
+![Diagram](https://github.com/teliotxen/servicePlan/blob/master/servicePlandrawio.png?raw=true)
 
 #### 1. `scenario_detail.html`  페이지 렌더링 될 때, localStorage에 key 값 중에 'null'(sortableJs에서 리스트 위치값을 저장한 string)이 있는지 확인 후 저장된 값이 있으면 이전에 페이지의 위치 값을 저장했음으로 true 값을 반환하고 그렇지 않은 경우 백엔드에 리스트 위치 값을 불러와서 localStorage에 저장
 
